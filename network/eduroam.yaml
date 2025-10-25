@@ -1,0 +1,17 @@
+network:
+    ethernets:
+        eth0:
+            dhcp4: no
+            addresses:
+              - 10.0.0.1/24
+            optional: true
+    wifis:
+      wlan0:
+        dhcp4: yes
+        dhcp4-overrides:
+          use-dns: false
+        nameservers:
+          addresses: [8.8.8.8, 8.8.4.4]
+        access-points:
+          "RedRover": {}
+    version: 2
