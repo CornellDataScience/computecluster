@@ -3,7 +3,7 @@
 Description: Raspberry Pi 4
 Version: Ubuntu 22.04.5 LTS (jammy)
 Ethernet IP: `10.0.0.1`
-### Information:
+### CPU Information:
 ```
 Architecture:                aarch64
   CPU op-mode(s):            32-bit, 64-bit
