@@ -1,7 +1,7 @@
 # Architecture
 ## Head Node
-Description: Raspberry Pi 4
-Version: Ubuntu 22.04.5 LTS (jammy)
+Description: Raspberry Pi 4 \
+Version: Ubuntu 22.04.5 LTS (jammy) \
 Ethernet IP: `10.0.0.1`
 ### CPU Information:
 ```
@@ -31,8 +31,8 @@ Caches (sum of all):
 N/A
 
 ## Compute1
-Description: Large PC with glass door
-Version: Ubuntu 24.04.3 LTS (noble)
+Description: Large PC with glass door \
+Version: Ubuntu 24.04.3 LTS (noble) \
 Ethernet IP: `10.0.0.2`
 ### CPU Information
 ```
@@ -82,8 +82,8 @@ NUMA:
 Drivers installed
 
 ## Compute2
-Description: Dell Lab PC
-Version: Ubuntu 24.04.3 LTS (noble)
+Description: Dell Lab PC \
+Version: Ubuntu 24.04.3 LTS (noble) \
 Ethernet IP: `10.0.0.3`
 ### CPU Information
 ```
@@ -135,8 +135,8 @@ NUMA:
 ### GPU Information
 TODO
 ## Compute3
-Description: Raspberry Pi 5
-Version: Ubuntu 24.04.3 LTS (noble)
+Description: Raspberry Pi 5 \
+Version: Ubuntu 24.04.3 LTS (noble) \
 Ethernet IP: `10.0.0.4`
 ### CPU Information
 ```
