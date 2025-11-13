@@ -1,0 +1,29 @@
+============================================================
+🤗 Hugging Face Model Pre-loader for vLLM
+============================================================
+Pre-loading model and tokenizer: meta-llama/Llama-2-7b-chat-hf
+Cache location: ~/.cache/huggingface/transformers
+
+1. Downloading model configuration...
+✓ Config downloaded successfully
+  Model type: llama
+  Architecture: ['LlamaForCausalLM']
+
+2. Downloading tokenizer...
+✓ Tokenizer downloaded successfully
+  Vocab size: 32000
+  Model max length: 1000000000000000019884624838656
+
+3. Downloading generation config...
+✓ Generation config downloaded successfully
+
+4. Downloading model weights and additional files...
+   This may take several minutes for large models...
+   Using snapshot_download to get all model files...
+Fetching 16 files:   0%|          | 0/16 [00:00<?, ?it/s]Fetching 16 files:  44%|████▍     | 7/16 [42:34<54:44, 364.96s/it]Fetching 16 files:  62%|██████▎   | 10/16 [43:03<23:00, 230.03s/it]Fetching 16 files: 100%|██████████| 16/16 [43:03<00:00, 161.48s/it]
+✓ All model files downloaded to: /home/cadmin/.cache/huggingface/hub/models--meta-llama--Llama-2-7b-chat-hf/snapshots/f5db02db724555f92da89c216ac04704f23d4590
+
+4. Verifying cache contents...
+⚠ No cache directories found (this might be normal)
+
+🎉 Successfully pre-loaded meta-llama/Llama-2-7b-chat-hf!

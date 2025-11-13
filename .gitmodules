@@ -1,0 +1,6 @@
+[submodule "benchmarking/llama.cpp"]
+	path = benchmarking/llama.cpp
+	url = https://github.com/ggerganov/llama.cpp
+[submodule "vllm"]
+	path = vllm
+	url = https://github.com/vllm-project/vllm
