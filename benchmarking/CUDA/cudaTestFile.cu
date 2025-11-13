@@ -17,7 +17,7 @@ int main() {
         return 1;
     }
 
-    // Launch kernel: 1 block, 1 thread
+    // Launch kernel with 1 block and 1 thread
     addKernel<<<1, 1>>>(a, b, d_result);
 
     // Check for any launch errors and print them
@@ -28,7 +28,7 @@ int main() {
         return 1;
     }
 
-    // Copy all the result back to CPU
+    // Copy all the result back to the CPU
     err = cudaMemcpy(&result, d_result, sizeof(int), cudaMemcpyDeviceToHost);
     if (err != cudaSuccess) {
         printf("cudaMemcpy failed: %s\n", cudaGetErrorString(err));
