@@ -1,8 +1,9 @@
 #!/bin/bash
 
-CUDA_VISIBLE_DEVICES=0 python3 -m vllm.entrypoints.openai.api_server \
+CUDA_VISIBLE_DEVICES=0,1 python3 -m vllm.entrypoints.openai.api_server \
     --model meta-llama/Llama-2-7b-chat-hf \
-    --swap-space 16 \
+    --tensor-parallel-size 2 \
+    --swap-space 8 \
     --disable-log-requests \
     --enforce-eager \
     --enable-chunked-prefill \
