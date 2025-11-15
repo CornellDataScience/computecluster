@@ -20,7 +20,6 @@ __global__ void matmulNaive(const float* A, const float* B, float* C,
     int row = blockIdx.y * blockDim.y + threadIdx.y;
     int col = blockIdx.x * blockDim.x + threadIdx.x;
 
-    // Bounds check (threads outside matrix do nothing)
     if (row >= M || col >= N) return;
 
     float sum = 0.0f;
