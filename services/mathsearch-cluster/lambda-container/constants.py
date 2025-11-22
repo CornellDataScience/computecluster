@@ -1,3 +1,5 @@
+import os
+
 client_indices = {
     'sqs': 0,
     's3': 1
@@ -13,3 +15,6 @@ DURATION = 86400 * 7
 
 # S3
 BUCKET = 'mathsearch-intermediary'
+
+# ML Model API (local compute cluster)
+ML_API_URL = os.environ.get('ML_API_URL', 'http://localhost:8000')
