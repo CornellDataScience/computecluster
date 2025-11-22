@@ -4,22 +4,30 @@ import boto3
 import json
 import dataHandler
 import subprocess
-import os
+import shutil
 #import PyPDF2
 from PIL import Image, ImageDraw
 import pdf2image
 import cv2
-from sagemaker.pytorch import PyTorchPredictor
-from sagemaker.deserializers import JSONDeserializer
+# Removed SageMaker imports - now using local API
+# from sagemaker.pytorch import PyTorchPredictor
+# from sagemaker.deserializers import JSONDeserializer
 import traceback
 import requests
 import time
 import Levenshtein
 from fpdf import FPDF
 print("Finished imports")
-
 # Initialize S3 client
-s3 = boto3.client('s3')
+# s3 = boto3.client('s3')
+
+# directory corresponding to /mathsearch-cluster/lambda-container
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+PROJECT_ROOT = os.path.dirname(BASE_DIR)
+
+INPUT_DIR = os.path.join(PROJECT_ROOT, "input")
+OUTPUT_DIR = os.path.join(PROJECT_ROOT, "output")
 
 
 def levenshtein_distance(query_string, latex_list, top_n):
@@ -74,45 +82,39 @@ def image_to_latex_convert(image, query_bool):
 
 #print("Finished image_to_latex_convert")
 
-def downloadDirectoryFroms3(bucketName, remoteDirectoryName):
-    s3_resource = boto3.resource('s3')
-    bucket = s3_resource.Bucket(bucketName) 
-    for obj in bucket.objects.filter(Prefix = remoteDirectoryName):
-        if not os.path.exists(os.path.dirname(obj.key)):
-            os.makedirs(os.path.dirname(obj.key))
-        bucket.download_file(obj.key, obj.key) # save to same path
-
-#print("Finished downloadDirectoryFroms3")
-
+# NEW METHOD! swapped out s3 buckets for local directories
+# note that for a given uuid, "/mathsearch/input/{uuid}_pdf.pdf" and "/mathsearch/input/{uuid}_image.png" must exist
 def download_files(pdf_name, query_name, png_converted_pdf_path, pdfs_from_bucket_path):
-    """
-    Returns path to PDF and query image after downloading PDF and query from the S3 bucket
-    """
-    local_pdf = pdfs_from_bucket_path + "/" + pdf_name + ".pdf"
-    local_target = png_converted_pdf_path+"_"+ pdf_name + "/" + "query.png"
+    local_pdf = os.path.join(pdfs_from_bucket_path, pdf_name + ".pdf")
+    local_target_dir = f"{png_converted_pdf_path}_{pdf_name}"
+    local_target = os.path.join(local_target_dir, "query.png")
+
     print("local_pdf",local_pdf)
     print("pdf_name",pdf_name)
     print("local_target", local_target)
 
-    # download and preprocess pdf to png
-    s3.download_file(
-        Bucket=BUCKET, Key="inputs/"+pdf_name, Filename=local_pdf
-    )
-    
-    images = pdf2image.convert_from_path(local_pdf, dpi=500)
-    
-    # create directory to put the converted pngs into
-    subprocess.run(f'mkdir -p {png_converted_pdf_path}_{pdf_name}', shell=True)
-    for i in range(len(images)):
-        pdf_image = png_converted_pdf_path + "_" + pdf_name + "/"+ str(i) + ".png"
-        images[i].save(pdf_image)
-    
-    # download query png
-    s3.download_file(
-        Bucket=BUCKET, Key="inputs/"+query_name, Filename=local_target
-    )
+    # ensure that the dirs exist
+    os.makedirs(pdfs_from_bucket_path, exist_ok=True)
+    os.makedirs(local_target_dir, exist_ok=True)
 
-    # return paths to the pdf and query that we downloaded
+    # copy pdf from /math/search/input to /tmp
+    src_pdf = os.path.join(INPUT_DIR, pdf_name + ".pdf")
+    if not os.path.exists(src_pdf):
+        raise FileNotFoundError(f"Expected input PDF not found: {src_pdf}")
+    shutil.copy2(src_pdf, local_pdf)
+
+    # convert pdf to png in /tmp
+    images = pdf2image.convert_from_path(local_pdf, dpi=500)
+    subprocess.run(f'mkdir -p {png_converted_pdf_path}_{pdf_name}', shell=True)
+    for i,img in enumerate(images):
+        pdf_image = f"{png_converted_pdf_path}_{pdf_name}/{i}.png"
+        img.save(pdf_image)
+    
+    src_query = os.path.join(INPUT_DIR, query_name + ".png")
+    if not os.path.exists(src_query):
+        raise FileNotFoundError(f"Expected query image not found: {src_query}")
+    shutil.copy2(src_query, local_target)
+
     return local_pdf, f"{png_converted_pdf_path}_{pdf_name}", local_target
 
 #print("Finished download_files")
@@ -164,7 +166,7 @@ def final_output(pdf_name, png_pdf_path, bounding_boxes):
 
   pdf_in = PDF_IN_DIR + pdf_name + ".pdf"
   #pdf_out = PDF_OUT_DIR + pdf_name
-  pdf_out = PDF_OUT_DIR + pdf_name[:-4]+".pdf"
+  pdf_out_tmp = PDF_OUT_DIR + pdf_name[:-4]+".pdf"
   #pdf_no_ext = pdf_name[:-4]
 
   result_pages = list(bounding_boxes.keys())
@@ -182,32 +184,16 @@ def final_output(pdf_name, png_pdf_path, bounding_boxes):
     
     pdf.add_page()
     pdf.image(paths[i], 0, 0, 210, 297) # A4 paper sizing
-  pdf.output(pdf_out, "F")
+  pdf.output(pdf_out_tmp, "F")
 
-  # RESIZE_FACTOR = 0.25
-  # RESAMPLE_ALGO = Image.Resampling.LANCZOS
-  # pages = []
-  # with open(pdf_in, 'rb') as file: 
-  #   pdf = PyPDF2.PdfReader(file)
-  #   for i, page in enumerate(pdf.pages):
-  #       image_path_in = IMG_IN_DIR + str(i) + ".png"
-  #       if str(i) in result_pages:  
-  #         # pass in list of bounding boxes for each page
-  #         img = draw_bounding_box(image_path_in, bounding_boxes[str(i)])
-  #       else:
-  #         img = Image.open(image_path_in).convert('RGB')
-        
-  #       w, h = img.size
-  #       resized_image = img.resize((int(w*RESIZE_FACTOR), int(h*RESIZE_FACTOR)), resample=RESAMPLE_ALGO)
-  #       pages.append(resized_image)
+  ## TODO this will have to be changed to local solution
+  os.makedirs(OUTPUT_DIR, exist_ok=True)
+  final_pdf_name = pdf_name[:-4] + ".pdf"
+  final_pdf_path = os.path.join(OUTPUT_DIR, final_pdf_name)
+  shutil.copy2(pdf_out_tmp, final_pdf_path)
+  print(f"merged final pdf, saved to {final_pdf_path}")
 
-  # pages[0].save(pdf_out, save_all=True, append_images=pages[1:], format="PDF")
-  
-  try:
-    s3.upload_file(pdf_out, OUTPUT_BUCKET, pdf_name[:-4]+".pdf")
-    print(f"merged final pdf, uploaded {pdf_out} to {OUTPUT_BUCKET}")
-  except:
-    raise Exception("Upload failed")
+  return final_pdf_path
 
 #print("Finished final_output")
 
@@ -304,51 +290,74 @@ def lambda_handler(event, context):
           query_name = uuid+"_image"
           local_pdf, png_pdf_path, local_target = download_files(pdf_name, query_name, png_converted_pdf_path, pdfs_from_bucket_path)
 
-          ## CALL TO SAGEMAKER TO RUN YOLO
-          sm_client = boto3.client(service_name="sagemaker")
-          ENDPOINT_NAME = "mathsearch-yolov8-production-v1"
-          endpoint_created = False
-          # start_time = time.time()
-          response = sm_client.list_endpoints()
-          for ep in response['Endpoints']:
-              print(f"Endpoint Status = {ep['EndpointStatus']}")
-              if ep['EndpointName']==ENDPOINT_NAME and ep['EndpointStatus']=='InService':
-                  endpoint_created = True
+          ## CALL TO LOCAL COMPUTE CLUSTER API TO RUN YOLO
+          # Check if API is available
+          try:
+              health_response = requests.get(f"{ML_API_URL}/health", timeout=5)
+              if health_response.status_code != 200:
+                  raise Exception(f"API health check failed: {health_response.status_code}")
+          except Exception as e:
+              return {
+                  'statusCode': 400,
+                  'body': json.dumps('Error connecting to ML API'),
+                  'error': str(f"Error connecting to ML API at {ML_API_URL}: {e}")
+              }
 
-          # return error if endpoint not created successfully
-          if not endpoint_created:
-            return {
-              'statusCode': 400,
-              'body': json.dumps('Error with Sagemaker Endpoint'),
-              'error': str("Error with Sagemaker Endpoint")
-            }
-
-          predictor = PyTorchPredictor(endpoint_name=ENDPOINT_NAME,
-                            deserializer=JSONDeserializer())
-
-          print("Sending to Sagemaker...")
+          print(f"Sending to local ML API at {ML_API_URL}...")
           yolo_result = []
           os.chdir(png_converted_pdf_path+"_"+ pdf_name)
           infer_start_time = time.time()
+          
           for file in os.listdir(png_pdf_path):
-            # don't need to run SageMaker on query.png
+            # don't need to run inference on query.png
             if file == "query.png": continue
 
             print(f"Processing {file}")
             
-            orig_image = cv2.imread(file)
-            model_height, model_width = 640, 640
-
-            resized_image = cv2.resize(orig_image, (model_height, model_width))
-            payload = cv2.imencode('.png', resized_image)[1].tobytes()
-
             page_num = file.split(".")[0]
-            yolo_result.append((predictor.predict(payload), page_num))
+            file_path = os.path.join(png_pdf_path, file)
+            
+            # Send image file to API
+            try:
+                with open(file_path, 'rb') as f:
+                    response = requests.post(
+                        f"{ML_API_URL}/predict",
+                        files={'file': f},
+                        timeout=60
+                    )
+                
+                if response.status_code != 200:
+                    print(f"Error processing {file}: {response.status_code} - {response.text}")
+                    # Continue with empty result for this page
+                    yolo_result.append(({"boxes": []}, page_num))
+                    continue
+                
+                api_result = response.json()
+                
+                # Transform API response to match expected format
+                # API returns: {"boxes": [{"bbox": [x1,y1,x2,y2], "confidence": score, "class": label, ...}], "count": N}
+                # Code expects: {"boxes": [[x1, y1, x2, y2, confidence, label], ...]}
+                transformed_boxes = []
+                for box in api_result.get("boxes", []):
+                    bbox = box["bbox"]  # [x1, y1, x2, y2]
+                    confidence = box["confidence"]
+                    class_label = box["class"]
+                    # Format: [x1, y1, x2, y2, confidence, label]
+                    transformed_boxes.append([bbox[0], bbox[1], bbox[2], bbox[3], confidence, class_label])
+                
+                yolo_result.append(({"boxes": transformed_boxes}, page_num))
+                
+            except Exception as e:
+                print(f"Error processing {file}: {e}")
+                # Continue with empty result for this page
+                yolo_result.append(({"boxes": []}, page_num))
+          
           infer_end_time = time.time()
-          print(f"Sagemaker Inference Time = {infer_end_time - infer_start_time:0.4f} seconds")
+          print(f"ML API Inference Time = {infer_end_time - infer_start_time:0.4f} seconds")
 
-          print("Sagemaker results received!")
-          print(f"Length of Sagemaker results: {len(yolo_result[0])}")
+          print("ML API results received!")
+          if yolo_result:
+              print(f"Length of ML API results: {len(yolo_result)} pages")
           print(yolo_result)
 
           top5_eqns = rank_eqn_similarity(yolo_result=yolo_result, query_path=local_target, pdf_name=pdf_name)
@@ -377,7 +386,7 @@ def lambda_handler(event, context):
 
           # draws the bounding boxes for the top 5 equations and converts pages back to PDF
           # final PDF with bounding boxes saved in directory pdf_out
-          final_output(pdf_name, png_pdf_path, bboxes_dict)
+          final_pdf_path = final_output(pdf_name, png_pdf_path, bboxes_dict)
 
           # return JSON with the following keys
           # id: UUID
@@ -393,11 +402,15 @@ def lambda_handler(event, context):
       # Dequeue from SQS
       handler.delete_sqs_message(QUEUE_URL, receipt_handle)
 
-      # Upload json_result to OUTPUT_BUCKET
-      with open(f"/tmp/{uuid}_results.json", "w") as outfile: 
+      # Write json_result to local OUTPUT_DIR
+      tmp_json_path = f"/tmp/{uuid}_results.json" 
+      with open(tmp_json_path, "w") as outfile:
         json.dump(json_result, outfile)
+    
+      os.makedirs(OUTPUT_DIR, exist_ok=True)
+      final_json_path = os.path.join(OUTPUT_DIR, f"{uuid}_results.json")
+      shutil.copy2(tmp_json_path, final_json_path)
 
-      s3.upload_file(f"/tmp/{uuid}_results.json", OUTPUT_BUCKET, f"{uuid}_results.json")
       return json_result
        
   except:
@@ -408,3 +421,127 @@ def lambda_handler(event, context):
         'body': json.dumps(f'Error processing the document.'),
         'error': exception
     }
+
+#Replacement function for lambda_handler/SQS
+def process_local_job(uuid, input_dir, output_dir):
+  try:
+      print(f"--- Processing {uuid} ---")
+
+      # Clean tmp
+      subprocess.call('rm -rf /tmp/*', shell=True)
+
+      png_converted_pdf_path = "/tmp/converted_pdfs"
+      pdfs_from_bucket_path = "/tmp/pdfs_from_bucket"
+      yolo_crops_path = "/tmp/crops/"
+      subprocess.run(f'mkdir -p {pdfs_from_bucket_path}', shell=True, cwd="/tmp")
+      subprocess.run(f'mkdir -p {yolo_crops_path}', shell=True, cwd="/tmp")
+
+      # 1. Local Download
+      pdf_name = uuid + "_pdf"
+      query_name = uuid + "_image"
+      local_pdf, png_pdf_path, local_target = download_files(pdf_name, query_name, png_converted_pdf_path, pdfs_from_bucket_path)
+
+      # 2. Local ML API Call
+      # Check if API is available
+      try:
+          health_response = requests.get(f"{ML_API_URL}/health", timeout=5)
+          if health_response.status_code != 200:
+              raise Exception(f"API health check failed: {health_response.status_code}")
+      except Exception as e:
+          print(f"Error connecting to ML API at {ML_API_URL}: {e}")
+          with open(os.path.join(output_dir, f"{uuid}_result.json"), "w") as outfile: 
+              json.dump({"status": "error", "error": f"Error connecting to ML API: {e}"}, outfile)
+          return False
+
+      print(f"Sending to local ML API at {ML_API_URL}...")
+      yolo_result = []
+      
+      # Standardize file sorting
+      files = sorted(os.listdir(png_pdf_path), key=lambda x: int(x.split('.')[0]) if x.replace('.','').isdigit() else 0)
+      
+      for file in files:
+        if file == "query.png" or not file.endswith(".png"): continue
+
+        print(f"Processing {file}")
+        page_num = file.split(".")[0]
+        file_path = os.path.join(png_pdf_path, file)
+        
+        # Send image file to API
+        try:
+            with open(file_path, 'rb') as f:
+                response = requests.post(
+                    f"{ML_API_URL}/predict",
+                    files={'file': f},
+                    timeout=60
+                )
+            
+            if response.status_code != 200:
+                print(f"Error processing {file}: {response.status_code} - {response.text}")
+                # Continue with empty result for this page
+                yolo_result.append(({"boxes": []}, page_num))
+                continue
+            
+            api_result = response.json()
+            
+            # Transform API response to match expected format
+            # API returns: {"boxes": [{"bbox": [x1,y1,x2,y2], "confidence": score, "class": label, ...}], "count": N}
+            # Code expects: {"boxes": [[x1, y1, x2, y2, confidence, label], ...]}
+            transformed_boxes = []
+            for box in api_result.get("boxes", []):
+                bbox = box["bbox"]  # [x1, y1, x2, y2]
+                confidence = box["confidence"]
+                class_label = box["class"]
+                # Format: [x1, y1, x2, y2, confidence, label]
+                transformed_boxes.append([bbox[0], bbox[1], bbox[2], bbox[3], confidence, class_label])
+            
+            yolo_result.append(({"boxes": transformed_boxes}, page_num))
+            
+        except Exception as e:
+            print(f"Error processing {file}: {e}")
+            # Continue with empty result for this page
+            yolo_result.append(({"boxes": []}, page_num))
+
+      print("ML API results received!")
+      top5_eqns = rank_eqn_similarity(yolo_result=yolo_result, query_path=local_target, pdf_name=pdf_name)
+
+      page_nums_5 = sorted(set(([page_num for (latex_string, page_num, eqn_num, dist) in top5_eqns])))
+      top5_eqns_info = [(page_num, eqn_num) for (latex_string, page_num, eqn_num, dist) in top5_eqns]
+
+      bboxes_dict = {}
+      for dict_elem, page_num in yolo_result:
+        if page_num not in page_nums_5: continue
+        count = 1
+        for bboxes in dict_elem["boxes"]:
+          if (page_num, count) in top5_eqns_info:
+            rank = top5_eqns_info.index((page_num, count))
+            if page_num in bboxes_dict.keys():
+              bboxes_dict[page_num].append((bboxes[:4], rank))
+            else:
+              bboxes_dict[page_num] = [(bboxes[:4], rank)]
+          count += 1
+
+      # 3. Generate Output
+      final_pdf_path = final_output(pdf_name, png_pdf_path, bboxes_dict)
+
+      # 4. Generate JSON
+      pages = [int(p)+1 for p in page_nums_5]
+      json_result = {
+          "id": uuid, 
+          "status": "success",
+          "pdf_name": f"{uuid}.pdf", 
+          "pages": pages, 
+          "bbox": bboxes_dict
+      }
+        
+      with open(os.path.join(output_dir, f"{uuid}_result.json"), "w") as outfile: 
+        json.dump(json_result, outfile)
+
+      return True
+       
+  except:
+    exception = traceback.format_exc()
+    print(f"Error: {exception}")
+    # Write error JSON to output so worker knows we failed
+    with open(os.path.join(output_dir, f"{uuid}_result.json"), "w") as outfile: 
+        json.dump({"status": "error", "error": exception}, outfile)
+    return False
