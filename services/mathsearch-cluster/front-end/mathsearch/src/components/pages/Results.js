@@ -12,23 +12,23 @@ import AWS from "aws-sdk";
 //   import.meta.url,
 // ).toString();
 
-const url = `//cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`
-pdfjs.GlobalWorkerOptions.workerSrc = url
+// const url = `//cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`
+// pdfjs.GlobalWorkerOptions.workerSrc = url
 
 
-/* BEGIN AWS CONSTANTS */
+// /* BEGIN AWS CONSTANTS */
 
-// Constants for Amazon Cognito Identity Pool
-const IDENTITY_POOL_ID = process.env.REACT_APP_IDENTITY_POOL_ID;
-const REGION = process.env.REACT_APP_REGION;
-const S3_OUTPUT_BUCKET = process.env.REACT_APP_S3_OUTPUT_BUCKET;
-const WEBSOCKET_URL = 'wss://t05sr0quhf.execute-api.us-east-1.amazonaws.com/production/';
+// // Constants for Amazon Cognito Identity Pool
+// const IDENTITY_POOL_ID = process.env.REACT_APP_IDENTITY_POOL_ID;
+// const REGION = process.env.REACT_APP_REGION;
+// const S3_OUTPUT_BUCKET = process.env.REACT_APP_S3_OUTPUT_BUCKET;
+// const WEBSOCKET_URL = 'wss://t05sr0quhf.execute-api.us-east-1.amazonaws.com/production/';
 
-// Initialize the Amazon Cognito credentials provider
-AWS.config.region = REGION;
-AWS.config.credentials = new CognitoIdentityCredentials({
-  IdentityPoolId: IDENTITY_POOL_ID,
-});
+// // Initialize the Amazon Cognito credentials provider
+// AWS.config.region = REGION;
+// AWS.config.credentials = new CognitoIdentityCredentials({
+//   IdentityPoolId: IDENTITY_POOL_ID,
+// });
 
 /* END AWS CONSTANTS */
 
@@ -40,123 +40,104 @@ const Results = () => {
   const routeParams = useParams();
   const uuid = routeParams.uuid
 
-  /** Data variables */
-  const [pdf, setPdf] = useState(null);
-  const [pages, setPages] = useState([]);
+  // /** Data variables */
+  // const [pdf, setPdf] = useState(null);
+  // const [pages, setPages] = useState([]);
 
-  /** Loading variables */
-  const [loading, setLoading] = useState(true);
-  const [pdfDownloaded, setPdfDownloaded] = useState(false);
-  const [jsonDownloaded, setJsonDownloaded] = useState(false);
+  // /** Loading variables */
+  // const [loading, setLoading] = useState(true);
+  // const [pdfDownloaded, setPdfDownloaded] = useState(false);
+  // const [jsonDownloaded, setJsonDownloaded] = useState(false);
 
-  const [webSocket, setWebSocket] = useState(null);
+  // const [webSocket, setWebSocket] = useState(null);
 
-  const downloadRequest = (uuid) => {
-    AWS.config.credentials.get((err) => {
-      if (err) {
-        console.log("Error retrieving credentials: ", err);
-        return;
-      }
-      const myBucket = new AWS.S3({
-        params: { Bucket: S3_OUTPUT_BUCKET },
-        region: REGION,
-      });
+  // const downloadRequest = (uuid) => {
+  //   AWS.config.credentials.get((err) => {
+  //     if (err) {
+  //       console.log("Error retrieving credentials: ", err);
+  //       return;
+  //     }
+  //     const myBucket = new AWS.S3({
+  //       params: { Bucket: S3_OUTPUT_BUCKET },
+  //       region: REGION,
+  //     });
 
-      const fileKey = uuid + ".pdf";
-      // const fileKey = "6c5f1f35-bba5-4346-a04f-485b8fd167d6.pdf";
-      const jsonKey = uuid + "_results.json";
-      // const jsonKey = "6c5f1f35-bba5-4346-a04f-485b8fd167d6" + "_results.json";
+  //     const fileKey = uuid + ".pdf";
+  //     // const fileKey = "6c5f1f35-bba5-4346-a04f-485b8fd167d6.pdf";
+  //     const jsonKey = uuid + "_results.json";
+  //     // const jsonKey = "6c5f1f35-bba5-4346-a04f-485b8fd167d6" + "_results.json";
 
-      console.log(S3_OUTPUT_BUCKET);
+  //     console.log(S3_OUTPUT_BUCKET);
 
-      // Download PDF from S3 output bucket
-      console.log(fileKey)
-      const pdfParams = {
-        Bucket: S3_OUTPUT_BUCKET,
-        Key: fileKey,
-      };
+  //     // Download PDF from S3 output bucket
+  //     console.log(fileKey)
+  //     const pdfParams = {
+  //       Bucket: S3_OUTPUT_BUCKET,
+  //       Key: fileKey,
+  //     };
 
-      myBucket.getObject(pdfParams, (err, data) => {
-        if (err) {
-          console.error("Error downloading PDF:", err);
-        } else {
-          // Save the downloaded object to a state variable
-          setPdf(data.Body);
-          setPdfDownloaded(true);
-          console.log("PDF downloaded successfully!");
-        }
-      });
+  //     myBucket.getObject(pdfParams, (err, data) => {
+  //       if (err) {
+  //         console.error("Error downloading PDF:", err);
+  //       } else {
+  //         // Save the downloaded object to a state variable
+  //         setPdf(data.Body);
+  //         setPdfDownloaded(true);
+  //         console.log("PDF downloaded successfully!");
+  //       }
+  //     });
 
-      // Download json from S3 output bucket
-      const jsonParams = {
-        Bucket: S3_OUTPUT_BUCKET,
-        Key: jsonKey,
-      };
+  //     // Download json from S3 output bucket
+  //     const jsonParams = {
+  //       Bucket: S3_OUTPUT_BUCKET,
+  //       Key: jsonKey,
+  //     };
 
-      myBucket.getObject(jsonParams, (err, data) => {
-        if (err) {
-          console.error("Error downloading JSON:", err);
-        } else {
-          // Save the downloaded object to a state variable
-          let json = JSON.parse(data.Body.toString("utf-8"));
-          let pages = json.pages;
-          setPages(pages);
-          setJsonDownloaded(true);
-          console.log("JSON downloaded successfully!");
-        }
-      });
-    });
-  };
+  //     myBucket.getObject(jsonParams, (err, data) => {
+  //       if (err) {
+  //         console.error("Error downloading JSON:", err);
+  //       } else {
+  //         // Save the downloaded object to a state variable
+  //         let json = JSON.parse(data.Body.toString("utf-8"));
+  //         let pages = json.pages;
+  //         setPages(pages);
+  //         setJsonDownloaded(true);
+  //         console.log("JSON downloaded successfully!");
+  //       }
+  //     });
+  //   });
+  // };
+
+  const downloadRequest = async (uuid) => {
+    try {
+        const pdfResponse = await fetch(`${SERVER}/results/${uuid}.pdf`);
+        const pdfBlob = await pdfResponse.blob();
+        setPdf(await pdfBlob.arrayBuffer());
+        setPdfDownloaded(true);
+
+        const jsonResponse = await fetch(`${SERVER}/results/${uuid}_result.json`);
+        const json = await jsonResponse.json();
+        setPages(json.pages);
+        setJsonDownloaded(true);
+
+    } catch (err) {
+        console.error("Error downloading:", err);
+    }
+};
 
 
-  useEffect(() => {
-    console.log("Component mounted, setting up WebSocket");
-    const ws = new WebSocket(`${WEBSOCKET_URL}?uuid=${uuid}`);
-
-    ws.onopen = () => {
-      console.log('WebSocket Connected');
-      const message = JSON.stringify({ action: "register", uuid: uuid });
-      console.log('Sending message:', message);
-      ws.send(message);
-    };
-
-    ws.onmessage = (event) => {
-      console.log('WebSocket Message:', event.data);
-      // Handle incoming messages
-      // Assuming 'message' has a 'type' property to dictate actions
-      console.log('Start Fetch')
-      const message = JSON.parse(event.data);
-      if (message.type === "PDF_PROCESSING_COMPLETE") {
-        console.log("Results are ready:", message.message);
-        fetchData();
-      }
-    };
-
-    ws.onerror = (error) => {
-      console.log('WebSocket Error:', error);
-    };
-
-    ws.onclose = () => {
-      console.log('WebSocket Disconnected');
-    };
-
-    setWebSocket(ws);
-
-    // This function might need to be moved outside useEffect or wrapped in a useCallback if used elsewhere
-    const fetchData = async () => {
-      if (!pdfDownloaded || !jsonDownloaded) {
-        console.log(pdfDownloaded);
-        console.log(jsonDownloaded);
-        downloadRequest(uuid);
-      }
+useEffect(() => {
+  const interval = setInterval(() => {
+    if (!pdfDownloaded || !jsonDownloaded) {
+      downloadRequest(uuid);
+    } else {
       setLoading(false);
-    };
+      clearInterval(interval);
+    }
+  }, 2000); // poll every 2 seconds
 
-    // Clean up on unmount
-    return () => {
-      ws.close();
-    };
-  }, [pdfDownloaded, jsonDownloaded]); // Keep these dependencies if their changes should affect the effect
+  return () => clearInterval(interval);
+}, []); // Keep these dependencies if their changes should affect the effect
 
 
 
