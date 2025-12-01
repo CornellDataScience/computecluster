@@ -1,8 +1,8 @@
-# vLLM on the Compute Cluster
+# Using vLLM on CDS Compute Cluster
 
 ## Overview
 
-This cluster runs vLLM (high-performance LLM inference) with SLURM job scheduling. The setup uses a client-server architecture where a persistent vLLM server runs on GPU nodes and clients submit inference requests via SLURM jobs.
+This cluster runs vLLM with SLURM job scheduling. The setup uses a client-server architecture where a persistent vLLM server runs on GPU nodes and clients submit inference requests via SLURM jobs.
 
 ## Architecture
 
@@ -19,7 +19,7 @@ This cluster runs vLLM (high-performance LLM inference) with SLURM job schedulin
 sbatch ~/vllm-server.sh
 ```
 
-Wait 1-3 minutes for the model to load. Check if ready:
+The model might take a few minutes to load. To check if ready:
 
 ```bash
 curl http://compute1:8000/v1/models
@@ -31,10 +31,10 @@ curl http://compute1:8000/v1/models
 cd ~/computecluster
 
 # Simple prompt
-./submit_prompt.sh "What is machine learning?"
+./submit_prompt.sh "Your prompt here"
 
 # With custom token limit
-./submit_prompt.sh "Write a story about robots" 500
+./submit_prompt.sh "Your prompt here" <token limit>
 
 # Interactive mode
 ./interactive_prompt.sh
@@ -46,10 +46,10 @@ cd ~/computecluster
 # Check job status
 squeue -u $USER
 
-# View output (after job completes)
+# View output (Once job completes)
 cat ~/computecluster/jobs/prompts/vllm_prompt_*_output.json | jq .
 
-# Monitor live
+# Live monitoring 
 tail -f ~/computecluster/jobs/prompts/vllm_prompt_*.out
 ```
 
