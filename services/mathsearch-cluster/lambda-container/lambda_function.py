@@ -1,6 +1,6 @@
 from constants import *
 import os
-import boto3
+# import boto3
 import json
 import dataHandler
 import subprocess
@@ -179,8 +179,10 @@ def final_output(pdf_name, png_pdf_path, bounding_boxes):
   for i in range(len(paths)-1):
     #print(f"adding {paths[i]}")
     if str(i) in result_pages:  
-      img = draw_bounding_box(paths[i], bounding_boxes[str(i)])
-      img.save(paths[i])
+      full_path = os.path.join(png_pdf_path, paths[i])
+      img = draw_bounding_box(full_path, ...)
+      img.save(full_path)
+      pdf.image(full_path)
     
     pdf.add_page()
     pdf.image(paths[i], 0, 0, 210, 297) # A4 paper sizing
@@ -322,7 +324,7 @@ def lambda_handler(event, context):
                 with open(file_path, 'rb') as f:
                     response = requests.post(
                         f"{ML_API_URL}/predict",
-                        files={'file': f},
+                        files={'file': ('page.png', f, 'image/png')},
                         timeout=60
                     )
                 
@@ -471,7 +473,7 @@ def process_local_job(uuid, input_dir, output_dir):
             with open(file_path, 'rb') as f:
                 response = requests.post(
                     f"{ML_API_URL}/predict",
-                    files={'file': f},
+                    files={'file': ('page.png', f, 'image/png')},
                     timeout=60
                 )
             

@@ -3,17 +3,20 @@ import { Document, Page, pdfjs } from "react-pdf/dist/esm/entry.webpack5";
 import "./Results.css";
 import NavBar from "../NavBar.js";
 import { useLocation, useParams } from "react-router-dom";
-import { CognitoIdentityCredentials } from "aws-sdk/global";
-import AWS from "aws-sdk";
-// import { pdfjs } from 'react-pdf';
+// import { CognitoIdentityCredentials } from "aws-sdk/global";
+// import AWS from "aws-sdk";
 
-// pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-//   'pdfjs-dist/build/pdf.worker.min.js',
-//   import.meta.url,
-// ).toString();
+const SERVER = "http://compute1:8000"; 
 
-// const url = `//cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`
-// pdfjs.GlobalWorkerOptions.workerSrc = url
+import { pdfjs } from 'react-pdf';
+
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  'pdfjs-dist/build/pdf.worker.min.js',
+  import.meta.url,
+).toString();
+
+const url = `//cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`
+pdfjs.GlobalWorkerOptions.workerSrc = url
 
 
 // /* BEGIN AWS CONSTANTS */
@@ -41,13 +44,13 @@ const Results = () => {
   const uuid = routeParams.uuid
 
   // /** Data variables */
-  // const [pdf, setPdf] = useState(null);
-  // const [pages, setPages] = useState([]);
+  const [pdf, setPdf] = useState(null);
+  const [pages, setPages] = useState([]);
 
   // /** Loading variables */
-  // const [loading, setLoading] = useState(true);
-  // const [pdfDownloaded, setPdfDownloaded] = useState(false);
-  // const [jsonDownloaded, setJsonDownloaded] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [pdfDownloaded, setPdfDownloaded] = useState(false);
+  const [jsonDownloaded, setJsonDownloaded] = useState(false);
 
   // const [webSocket, setWebSocket] = useState(null);
 
