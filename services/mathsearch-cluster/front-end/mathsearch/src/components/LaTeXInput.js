@@ -425,7 +425,7 @@ function LaTeXInput() {
     const svgData = await response.text();
 
     return new Promise((resolve, reject) => {
-      const cleanedSVG = cleanSVG(svgData); // Ensure your SVG is properly cleaned
+      const cleanedSVG = cleanSVG(svgData); // Ensure SVG is properly cleaned
       const dimensions = scaleCanvas(cleanedSVG, 800);
       const canvas = document.createElement('canvas');
       canvas.width = dimensions.width;
@@ -436,7 +436,7 @@ function LaTeXInput() {
       img.onload = () => {
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
         canvas.toBlob((blob) => {
-          resolve(blob);  // Now you have a blob that can be uploaded
+          resolve(blob);  
         }, 'image/png');
       };
       img.onerror = (err) => {
