@@ -72,6 +72,8 @@ Munge is an authentication client that Slurm uses to authenticate its communicat
     ```
     sudo find /etc/apt/sources.list.d -type f -name '*.list' -exec sudo sed -i 's|^deb http://10\.0\.0\.1|# &|' {} \;
     ```
+
+    If this command doesnt work, omit the `sudo` at the beginning of the command.
 6. Refresh and bring system to a clean state
     ```
     sudo apt-get clean
