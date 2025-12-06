@@ -11,7 +11,6 @@ from lambda_function import process_local_job
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 PROJECT_ROOT = os.path.dirname(BASE_DIR) # Up one level from lambda-container
 
-# Match the structure you showed in the screenshot
 INPUT_DIR = os.path.join(PROJECT_ROOT, "input")
 OUTPUT_DIR = os.path.join(PROJECT_ROOT, "output")
 
@@ -28,8 +27,8 @@ def get_pending_uuids():
     # Get all UUIDs from PDF files in Input
     input_uuids = set()
     for f in input_files:
-        if f.endswith(".pdf"):
-            uuid = f.replace(".pdf", "")
+        if f.endswith("_pdf.pdf"):
+            uuid = f.replace("_pdf.pdf", "")
             # Only count it if the corresponding image also exists
             if f"{uuid}_image.png" in input_files:
                 input_uuids.add(uuid)
@@ -57,6 +56,3 @@ if __name__ == "__main__":
         for uuid in pending:
             # Call the function from lambda_function.py
             process_local_job(uuid, INPUT_DIR, OUTPUT_DIR)
-            
-            # Optional cooldown
-            time.sleep(1)

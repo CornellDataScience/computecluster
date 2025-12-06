@@ -1,0 +1,60 @@
+{
+  "timestamp": 1765045528,
+  "temperature": 31.5,
+  "cpu_usage": 0.1,
+  "memory": {
+    "total_kb": 32687844,
+    "used_kb": 5848640,
+    "available_kb": 26839204,
+    "usage_percent": 17.9
+  },
+  "disk": {
+    "total_gb": 3664.0,
+    "used_gb": 449.1,
+    "available_gb": 3214.9,
+    "usage_percent": 12.3
+  },
+  "load_average": {
+    "1min": 0.4287109375,
+    "5min": 0.1982421875,
+    "15min": 0.064453125
+  },
+  "uptime": "2d 22h 52m",
+  "processes": [
+    {
+      "user": "cadmin",
+      "pid": "175736",
+      "cpu": "46.4",
+      "mem": "0.6",
+      "command": "/home/cadmin/.vscode-server/cli/servers/Stable-ac4cbdf48759c"
+    },
+    {
+      "user": "cadmin",
+      "pid": "176253",
+      "cpu": "14.6",
+      "mem": "1.5",
+      "command": "/home/cadmin/.vscode-server/cli/servers/Stable-bf9252a2fb45b"
+    },
+    {
+      "user": "cadmin",
+      "pid": "176129",
+      "cpu": "8.2",
+      "mem": "0.0",
+      "command": "/home/cadmin/.vscode-server/code-bf9252a2fb45be6893dd8870c0b"
+    },
+    {
+      "user": "cadmin",
+      "pid": "175725",
+      "cpu": "7.9",
+      "mem": "1.1",
+      "command": "/home/cadmin/.vscode-server/cli/servers/Stable-ac4cbdf48759c"
+    },
+    {
+      "user": "cadmin",
+      "pid": "176216",
+      "cpu": "6.2",
+      "mem": "0.3",
+      "command": "/home/cadmin/.vscode-server/cli/servers/Stable-bf9252a2fb45b"
+    }
+  ]
+}

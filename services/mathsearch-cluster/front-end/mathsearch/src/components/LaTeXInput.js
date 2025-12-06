@@ -330,12 +330,12 @@ import { v4 } from "uuid";
 import { useNavigate } from "react-router-dom";
 import "./LaTeXInput.css";
 import Alert from '@mui/material/Alert';
-import CheckIcon from '@mui/material/Check';
+import CheckIcon from '@mui/icons-material/Check';
 import MathKeyboard from './MathKeyboard';
 
 /* BEGIN API CONSTANTS */
 // Local API endpoint for file uploads
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8001';
 /* END API CONSTANTS */
 
 function LaTeXInput() {
@@ -454,7 +454,10 @@ function LaTeXInput() {
 
       // Create FormData for PDF upload
       const pdfFormData = new FormData();
-      pdfFormData.append('file', file);
+      const pdfFileWithName = new File([file], `${uuid}_pdf.pdf`, {
+  type: file.type,
+});
+      pdfFormData.append('file', pdfFileWithName);
       pdfFormData.append('uuid', uuid);
       pdfFormData.append('type', 'pdf');
 
@@ -522,7 +525,7 @@ function LaTeXInput() {
     } catch (error) {
       // Handle upload errors
       setError({ 
-        isError: true, 
+        isError: true,
         message: `Upload failed: ${error.message}` 
       });
     }

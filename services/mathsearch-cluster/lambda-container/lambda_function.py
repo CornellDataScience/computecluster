@@ -179,13 +179,15 @@ def final_output(pdf_name, png_pdf_path, bounding_boxes):
   for i in range(len(paths)-1):
     #print(f"adding {paths[i]}")
     if str(i) in result_pages:  
+      pdf.add_page()
       full_path = os.path.join(png_pdf_path, paths[i])
-      img = draw_bounding_box(full_path, ...)
+      img = draw_bounding_box(full_path, bounding_boxes[str(i)])
       img.save(full_path)
       pdf.image(full_path)
     
     pdf.add_page()
-    pdf.image(paths[i], 0, 0, 210, 297) # A4 paper sizing
+    full_path = os.path.join(png_pdf_path, paths[i])
+    pdf.image(full_path, 0, 0, 210, 297) # A4 paper sizing
   pdf.output(pdf_out_tmp, "F")
 
   ## TODO this will have to be changed to local solution

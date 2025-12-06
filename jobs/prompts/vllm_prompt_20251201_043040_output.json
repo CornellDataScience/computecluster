@@ -1,0 +1,27 @@
+{
+  "id": "cmpl-141441e914b54ea1be594d5ecfca500d",
+  "object": "text_completion",
+  "created": 1764563441,
+  "model": "meta-llama/Llama-2-7b-chat-hf",
+  "choices": [
+    {
+      "index": 0,
+      "text": "\n\nDark matter is a type of matter that does not emit, absorb, or reflect any electromagnetic radiation, making it invisible to telescopes, but its presence can be inferred through its gravitational effects on visible matter and the way it distorts light.",
+      "logprobs": null,
+      "finish_reason": "stop",
+      "stop_reason": null,
+      "token_ids": null,
+      "prompt_logprobs": null,
+      "prompt_token_ids": null
+    }
+  ],
+  "service_tier": null,
+  "system_fingerprint": null,
+  "usage": {
+    "prompt_tokens": 7,
+    "total_tokens": 66,
+    "completion_tokens": 59,
+    "prompt_tokens_details": null
+  },
+  "kv_transfer_params": null
+}

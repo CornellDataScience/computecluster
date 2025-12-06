@@ -1,0 +1,8 @@
+{
+  "error": {
+    "message": "[{'type': 'json_invalid', 'loc': ('body', 10), 'msg': 'JSON decode error', 'input': {}, 'ctx': {'error': 'Expecting property name enclosed in double quotes'}}]",
+    "type": "Bad Request",
+    "param": null,
+    "code": 400
+  }
+}

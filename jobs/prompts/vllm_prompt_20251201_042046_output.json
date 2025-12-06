@@ -1,0 +1,27 @@
+{
+  "id": "cmpl-d66b763d451f455eb654ec5907795ab2",
+  "object": "text_completion",
+  "created": 1764562847,
+  "model": "meta-llama/Llama-2-7b-chat-hf",
+  "choices": [
+    {
+      "index": 0,
+      "text": "\n$1 is a prompt for a chatbot to ask a user about their favorite hobby.\n\n$USER is a variable that represents the user who is interacting with the chatbot.\n\n$Hobby is a variable that represents the user's favorite hobby.\n\n$CHATBOT is a variable that represents the chatbot itself.\n\n$MESSAGE is a variable that represents the message that the chatbot sends to the user.",
+      "logprobs": null,
+      "finish_reason": "length",
+      "stop_reason": null,
+      "token_ids": null,
+      "prompt_logprobs": null,
+      "prompt_token_ids": null
+    }
+  ],
+  "service_tier": null,
+  "system_fingerprint": null,
+  "usage": {
+    "prompt_tokens": 6,
+    "total_tokens": 106,
+    "completion_tokens": 100,
+    "prompt_tokens_details": null
+  },
+  "kv_transfer_params": null
+}

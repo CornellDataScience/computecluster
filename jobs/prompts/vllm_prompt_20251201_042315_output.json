@@ -1,0 +1,8 @@
+{
+  "error": {
+    "message": "[{'type': 'json_invalid', 'loc': ('body', 101), 'msg': 'JSON decode error', 'input': {}, 'ctx': {'error': 'Invalid control character at'}}]",
+    "type": "Bad Request",
+    "param": null,
+    "code": 400
+  }
+}

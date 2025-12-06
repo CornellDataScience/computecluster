@@ -359,11 +359,11 @@ def lambda_handler(event, context):
               if health_response.status_code != 200:
                   raise Exception(f"API health check failed: {health_response.status_code}")
           except Exception as e:
-              return {
-                  'statusCode': 400,
+            return {
+              'statusCode': 400,
                   'body': json.dumps('Error connecting to ML API'),
                   'error': str(f"Error connecting to ML API at {ML_API_URL}: {e}")
-              }
+            }
 
           print(f"Sending to local ML API at {ML_API_URL}...")
           yolo_result = []
@@ -375,7 +375,7 @@ def lambda_handler(event, context):
             if file == "query.png": continue
 
             print(f"Processing {file}")
-            
+
             page_num = file.split(".")[0]
             file_path = os.path.join(png_pdf_path, file)
             

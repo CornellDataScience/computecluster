@@ -1,0 +1,60 @@
+{
+  "timestamp": 1764763552,
+  "temperature": 44.6,
+  "cpu_usage": 0.6,
+  "memory": {
+    "total_kb": 8128008,
+    "used_kb": 522112,
+    "available_kb": 7605896,
+    "usage_percent": 6.4
+  },
+  "disk": {
+    "total_gb": 28.1,
+    "used_gb": 4.1,
+    "available_gb": 24.1,
+    "usage_percent": 14.4
+  },
+  "load_average": {
+    "1min": 0.02978515625,
+    "5min": 0.0283203125,
+    "15min": 0.0
+  },
+  "uptime": "9d 15h 10m",
+  "processes": [
+    {
+      "user": "cadmin",
+      "pid": "113704",
+      "cpu": "100",
+      "mem": "0.0",
+      "command": "ps aux"
+    },
+    {
+      "user": "root",
+      "pid": "113123",
+      "cpu": "0.1",
+      "mem": "0.0",
+      "command": "[kworker/2:3-events]"
+    },
+    {
+      "user": "root",
+      "pid": "113551",
+      "cpu": "0.1",
+      "mem": "0.0",
+      "command": "[kworker/2:0-events]"
+    },
+    {
+      "user": "root",
+      "pid": "1",
+      "cpu": "0.0",
+      "mem": "0.1",
+      "command": "/sbin/init fixrtc"
+    },
+    {
+      "user": "root",
+      "pid": "2",
+      "cpu": "0.0",
+      "mem": "0.0",
+      "command": "[kthreadd]"
+    }
+  ]
+}

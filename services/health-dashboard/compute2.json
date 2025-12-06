@@ -1,0 +1,60 @@
+{
+  "timestamp": 1764818549,
+  "temperature": 20.0,
+  "cpu_usage": 0.1,
+  "memory": {
+    "total_kb": 16055236,
+    "used_kb": 778856,
+    "available_kb": 15276380,
+    "usage_percent": 4.9
+  },
+  "disk": {
+    "total_gb": 231.2,
+    "used_gb": 18.3,
+    "available_gb": 212.9,
+    "usage_percent": 7.9
+  },
+  "load_average": {
+    "1min": 0.0322265625,
+    "5min": 0.02392578125,
+    "15min": 0.0
+  },
+  "uptime": "0d 7h 48m",
+  "processes": [
+    {
+      "user": "root",
+      "pid": "1003",
+      "cpu": "0.1",
+      "mem": "0.2",
+      "command": "/usr/bin/containerd"
+    },
+    {
+      "user": "root",
+      "pid": "1",
+      "cpu": "0.0",
+      "mem": "0.0",
+      "command": "/sbin/init"
+    },
+    {
+      "user": "root",
+      "pid": "2",
+      "cpu": "0.0",
+      "mem": "0.0",
+      "command": "[kthreadd]"
+    },
+    {
+      "user": "root",
+      "pid": "3",
+      "cpu": "0.0",
+      "mem": "0.0",
+      "command": "[pool_workqueue_release]"
+    },
+    {
+      "user": "root",
+      "pid": "4",
+      "cpu": "0.0",
+      "mem": "0.0",
+      "command": "[kworker/R-rcu_g]"
+    }
+  ]
+}

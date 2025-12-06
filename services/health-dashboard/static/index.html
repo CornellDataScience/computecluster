@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ORCA Cluster Health Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <style>
+    /*************************************************
+      BASE COLORS + LAYOUT
+    *************************************************/
+    :root {
+      --bg: #020617;
+      --text: #e5e7eb;
+      --text-muted: #9ca3af;
+      --accent: #38bdf8;
+      --success: #4ade80;
+      --danger: #f87171;
+      --border: rgba(148, 163, 184, 0.4);
+      --card: rgba(15, 23, 42, 0.92);
+      --radius: 14px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: system-ui, sans-serif;
+      background: linear-gradient(to bottom, #030712, #000000);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 18px;
+      overflow-x: hidden;
+      transition: background 0.2s ease;
+    }
+
+    /*************************************************
+       APP CONTAINER + CDS LOGO BACKGROUND
+    *************************************************/
+    .app-shell {
+      width: 100%;
+      max-width: 1200px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Large visible CDS logo watermark */
+    .app-shell::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: url("CDS_logo.png") center/60% no-repeat;
+      opacity: 0.12;
+      filter: blur(1px) brightness(1.3);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .app-inner {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /*************************************************
+       HEADER
+    *************************************************/
+    header {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .title-pill {
+      padding: 5px 10px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 0.75rem;
+      background: rgba(255,255,255,0.05);
+    }
+
+    h1 {
+      font-size: 1.4rem;
+      margin-top: 4px;
+    }
+
+    button {
+      cursor: pointer;
+      border-radius: var(--radius);
+      padding: 6px 12px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid var(--border);
+      color: var(--text);
+      transition: 0.15s;
+      margin-left: 6px;
+    }
+
+    button:hover {
+      background: rgba(255,255,255,0.12);
+    }
+
+    /*************************************************
+       NODE CARDS
+    *************************************************/
+    .cards-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .card {
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: rgba(15, 23, 42, 0.95);
+  padding: 14px;
+  min-height: 320px;     /* Smaller cards */
+  max-height: 400px;     /* Keeps them balanced */
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .status-pill {
+      padding: 4px 8px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      font-size: 0.70rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--success);
+    }
+
+    .status-dot.offline {
+      background: var(--danger);
+    }
+
+    /*************************************************
+       UNIFORM METRIC BARS
+    *************************************************/
+    .metrics-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .metric {
+      background: rgba(0,0,0,0.25);
+      border-radius: var(--radius);
+      padding: 10px;
+      border: 1px solid var(--border);
+    }
+
+    .metric-label {
+      font-size: 0.70rem;
+      text-transform: uppercase;
+      opacity: 0.7;
+      margin-bottom: 4px;
+    }
+
+    .bar-wrapper {
+      height: 16px;
+      background: #111827;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #38bdf8, #22c55e);
+      transform-origin: left;
+      transform: scaleX(0);
+      transition: 0.25s ease-out;
+    }
+
+    /*************************************************
+       LOAD + UPTIME CHIPS
+    *************************************************/
+    .chip {
+      padding: 6px 10px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      display: inline-block;
+      font-size: 0.75rem;
+      margin-right: 8px;
+      background: rgba(255,255,255,0.05);
+    }
+
+    /*************************************************
+       SMALLER PROCESSES BOX
+    *************************************************/
+    .processes {
+      flex: 0 0 180px;      /* <-- smaller height */
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 8px;
+      background: rgba(0,0,0,0.25);
+    }
+
+    .processes-table-wrapper {
+      overflow-y: auto;
+      margin-top: 4px;
+    }
+
+    .processes-table {
+      width: 100%;
+      font-size: 0.75rem;
+      border-collapse: collapse;
+    }
+
+    .processes-table td {
+      max-width: 180px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* Marquee for long commands */
+    .cmd-container {
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+}
+
+.cmd-text {
+  display: inline-block;
+  white-space: nowrap;
+  padding-right: 60px;
+}
+
+.cmd-marquee {
+  display: inline-block;
+  white-space: nowrap;
+  animation: marquee-loop 10s linear infinite;
+}
+
+@keyframes marquee-loop {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+    @keyframes marquee {
+      0% { transform: translateX(0%); }
+      100% { transform: translateX(-100%); }
+    }
+
+    footer {
+      text-align: right;
+      opacity: 0.7;
+      font-size: 0.75rem;
+      padding-top: 6px;
+    }
+
+    /*************************************************
+       PARTY MODE: DISCO LIGHTS, LASERS, CONFETTI
+    *************************************************/
+    body.party {
+      overflow: hidden;
+      animation: party-bg 0.2s infinite;
+    }
+
+    @keyframes party-bg {
+      0% { background-color: #ff0077; }
+      25% { background-color: #00eaff; }
+      50% { background-color: #8fff00; }
+      75% { background-color: #ffae00; }
+      100% { background-color: #ff0077; }
+    }
+
+    /* Lasers */
+    .laser {
+      position: fixed;
+      top: -20vh;
+      width: 4px;
+      height: 120vh;
+      background: linear-gradient(to bottom, transparent, #ff00ea99, transparent);
+      left: var(--xPos);
+      animation: laser-move 0.7s linear infinite;
+      z-index: 99999;
+      pointer-events: none;
+    }
+
+    @keyframes laser-move {
+      0% { transform: translateY(-100vh) rotate(15deg); }
+      100% { transform: translateY(100vh) rotate(-15deg); }
+    }
+
+    /* Confetti */
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      background: var(--color);
+      top: -20px;
+      left: var(--xPos);
+      opacity: 0.9;
+      border-radius: 2px;
+      animation: confetti-fall 1.5s linear infinite;
+      z-index: 99999;
+    }
+
+    @keyframes confetti-fall {
+      0% { transform: translateY(0) rotate(0deg); }
+      100% { transform: translateY(100vh) rotate(360deg); }
+    }
+
+    /* Shake the whole screen */
+    body.party .app-shell {
+      animation: shake 0.15s infinite;
+    }
+
+    @keyframes shake {
+      0% { transform: translate(0,0); }
+      25% { transform: translate(3px,-2px); }
+      50% { transform: translate(-3px,3px); }
+      75% { transform: translate(2px,-3px); }
+      100% { transform: translate(0,0); }
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="app-shell">
+    <div class="app-inner">
+
+      <header>
+        <div>
+          <div class="title-pill">ORCA CLUSTER</div>
+          <h1>Health Dashboard</h1>
+        </div>
+
+        <div>
+          <button id="refresh-btn">⟳ Refresh</button>
+          <button id="party-btn">✦ Party Mode</button>
+        </div>
+      </header>
+
+      <hr style="border-color: var(--border); margin: 8px 0;" />
+
+      <div class="cards-grid" id="cards-grid"></div>
+
+      <footer>This is a CDS Compute Cluster Project</footer>
+
+    </div>
+  </div>
+
+  <script>
+    const MACHINES = ["orca", "compute1", "compute2", "compute3"];
+    const REFRESH_INTERVAL = 5000;
+    const PARTY_TIME = 5000;
+
+    const grid = document.getElementById("cards-grid");
+    const refreshBtn = document.getElementById("refresh-btn");
+    const partyBtn = document.getElementById("party-btn");
+
+    let partyTimeout = null;
+
+    /***********************************************
+     Fetch + Render
+    ***********************************************/
+    function fmtPct(x) { return x == null ? "—" : x.toFixed(1) + "%"; }
+    function fmtTemp(t) { return t == null ? "—" : t.toFixed(1) + "°C"; }
+
+    async function fetchData() {
+      const res = await fetch("/all");
+      if (!res.ok) return;
+
+      const data = await res.json();
+      render(data);
+    }
+
+    function render(payload) {
+      grid.innerHTML = MACHINES.map(name => buildCard(name, payload[name])).join("");
+    }
+
+    function buildCard(name, d) {
+      if (!d) return `<div class="card offline-card"><h2>${name}</h2><p>Offline</p></div>`;
+
+      return `
+        <div class="card">
+          <div class="card-header">
+            <span style="font-size:1.1rem;font-weight:600">${name}</span>
+            <div class="status-pill">
+              <span class="status-dot"></span>
+              ONLINE
+            </div>
+          </div>
+
+          <div class="metrics-row">
+            ${metricBox("CPU", fmtPct(d.cpu_usage), d.cpu_usage)}
+            ${metricBox("Memory", fmtPct(d.memory.usage_percent), d.memory.usage_percent)}
+            ${metricBox("Disk", fmtPct(d.disk.usage_percent), d.disk.usage_percent)}
+          </div>
+
+          <div style="margin-top:8px">
+            <span class="chip">Load: ${d.load_average["1min"].toFixed(2)} · ${d.load_average["5min"].toFixed(2)} · ${d.load_average["15min"].toFixed(2)}</span>
+            <span class="chip">Uptime: ${d.uptime}</span>
+            <span class="chip">Temp: ${fmtTemp(d.temperature)}</span>
+          </div>
+
+          <div class="processes">
+            <strong style="font-size:0.75rem; opacity:0.8;">Top Processes</strong>
+            <div class="processes-table-wrapper">
+              <table class="processes-table">
+                <tbody>
+                  ${d.processes.slice(0,5).map(p => `
+                    <tr>
+                      <td>${p.pid}</td>
+                      <td>${p.cpu}</td>
+                      <td>${p.mem}</td>
+                      <td>
+                        <div class="cmd-container">
+                          <div class="cmd-marquee">
+  <span class="cmd-text">${p.command} ··· </span>
+  <span class="cmd-text">${p.command} ··· </span>  <!-- clone for seamless scroll -->
+</div>
+
+                        </div>
+                      </td>
+                    </tr>
+                  `).join("")}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function metricBox(label, value, percent) {
+      const scale = Math.max(0, Math.min(1, percent / 100));
+      return `
+        <div class="metric">
+          <div class="metric-label">${label}</div>
+          <div style="margin-bottom:4px">${value}</div>
+          <div class="bar-wrapper">
+            <div class="bar-fill" style="transform:scaleX(${scale})"></div>
+          </div>
+        </div>
+      `;
+    }
+
+    refreshBtn.onclick = fetchData;
+
+    /***********************************************
+      PARTY MODE: LASERS + CONFETTI + DISCO SHAKING
+    ***********************************************/
+    partyBtn.onclick = () => {
+      startParty();
+    };
+
+    function startParty() {
+      document.body.classList.add("party");
+
+      spawnLasers(12);
+      spawnConfetti(120);
+
+      clearTimeout(partyTimeout);
+      partyTimeout = setTimeout(() => {
+        document.body.classList.remove("party");
+        clearEffects();
+      }, PARTY_TIME);
+    }
+
+    const effects = [];
+
+    function spawnLasers(count) {
+      for (let i = 0; i < count; i++) {
+        const laser = document.createElement("div");
+        laser.className = "laser";
+        laser.style.setProperty("--xPos", Math.random() * 100 + "vw");
+        document.body.appendChild(laser);
+        effects.push(laser);
+      }
+    }
+
+    function spawnConfetti(count) {
+      const colors = ["#ff0044", "#22ddff", "#ffee00", "#44ff22", "#ff9900"];
+      for (let i = 0; i < count; i++) {
+        const c = document.createElement("div");
+        c.className = "confetti";
+        c.style.setProperty("--xPos", Math.random() * 100 + "vw");
+        c.style.setProperty("--color", colors[Math.floor(Math.random()*colors.length)]);
+        document.body.appendChild(c);
+        effects.push(c);
+      }
+    }
+
+    function clearEffects() {
+      effects.forEach(e => e.remove());
+      effects.length = 0;
+    }
+
+    /***********************************************/
+    fetchData();
+    setInterval(fetchData, REFRESH_INTERVAL);
+  </script>
+</body>
+</html>

@@ -1,185 +1,123 @@
 import React, { useState, useEffect } from "react";
-import { Document, Page, pdfjs } from "react-pdf/dist/esm/entry.webpack5";
+import { Document, Page, pdfjs } from "react-pdf";
 import "./Results.css";
 import NavBar from "../NavBar.js";
-import { useLocation, useParams } from "react-router-dom";
-// import { CognitoIdentityCredentials } from "aws-sdk/global";
-// import AWS from "aws-sdk";
+import { useParams } from "react-router-dom";
 
-const SERVER = "http://compute1:8000"; 
+const SERVER = "http://localhost:8001";
 
-import { pdfjs } from 'react-pdf';
-
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.js',
-  import.meta.url,
-).toString();
-
-const url = `//cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`
-pdfjs.GlobalWorkerOptions.workerSrc = url
-
-
-// /* BEGIN AWS CONSTANTS */
-
-// // Constants for Amazon Cognito Identity Pool
-// const IDENTITY_POOL_ID = process.env.REACT_APP_IDENTITY_POOL_ID;
-// const REGION = process.env.REACT_APP_REGION;
-// const S3_OUTPUT_BUCKET = process.env.REACT_APP_S3_OUTPUT_BUCKET;
-// const WEBSOCKET_URL = 'wss://t05sr0quhf.execute-api.us-east-1.amazonaws.com/production/';
-
-// // Initialize the Amazon Cognito credentials provider
-// AWS.config.region = REGION;
-// AWS.config.credentials = new CognitoIdentityCredentials({
-//   IdentityPoolId: IDENTITY_POOL_ID,
-// });
-
-/* END AWS CONSTANTS */
+// 1. WORKER CONFIGURATION
+// Use explicit HTTPS and unpkg for better stability with version 2.16.105
+pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@2.16.105/build/pdf.worker.min.js`;
 
 const Results = () => {
-  /**
-   * Grab route params from the URL
-   * @param uuid is unique id of the query
-   */
   const routeParams = useParams();
-  const uuid = routeParams.uuid
+  const uuid = routeParams.uuid;
 
-  // /** Data variables */
-  const [pdf, setPdf] = useState(null);
+  // We will store the "blob:..." string URL here, not the raw data
+  const [pdfUrl, setPdfUrl] = useState(null);
   const [pages, setPages] = useState([]);
-
-  // /** Loading variables */
+  
   const [loading, setLoading] = useState(true);
   const [pdfDownloaded, setPdfDownloaded] = useState(false);
   const [jsonDownloaded, setJsonDownloaded] = useState(false);
-
-  // const [webSocket, setWebSocket] = useState(null);
-
-  // const downloadRequest = (uuid) => {
-  //   AWS.config.credentials.get((err) => {
-  //     if (err) {
-  //       console.log("Error retrieving credentials: ", err);
-  //       return;
-  //     }
-  //     const myBucket = new AWS.S3({
-  //       params: { Bucket: S3_OUTPUT_BUCKET },
-  //       region: REGION,
-  //     });
-
-  //     const fileKey = uuid + ".pdf";
-  //     // const fileKey = "6c5f1f35-bba5-4346-a04f-485b8fd167d6.pdf";
-  //     const jsonKey = uuid + "_results.json";
-  //     // const jsonKey = "6c5f1f35-bba5-4346-a04f-485b8fd167d6" + "_results.json";
-
-  //     console.log(S3_OUTPUT_BUCKET);
-
-  //     // Download PDF from S3 output bucket
-  //     console.log(fileKey)
-  //     const pdfParams = {
-  //       Bucket: S3_OUTPUT_BUCKET,
-  //       Key: fileKey,
-  //     };
-
-  //     myBucket.getObject(pdfParams, (err, data) => {
-  //       if (err) {
-  //         console.error("Error downloading PDF:", err);
-  //       } else {
-  //         // Save the downloaded object to a state variable
-  //         setPdf(data.Body);
-  //         setPdfDownloaded(true);
-  //         console.log("PDF downloaded successfully!");
-  //       }
-  //     });
-
-  //     // Download json from S3 output bucket
-  //     const jsonParams = {
-  //       Bucket: S3_OUTPUT_BUCKET,
-  //       Key: jsonKey,
-  //     };
-
-  //     myBucket.getObject(jsonParams, (err, data) => {
-  //       if (err) {
-  //         console.error("Error downloading JSON:", err);
-  //       } else {
-  //         // Save the downloaded object to a state variable
-  //         let json = JSON.parse(data.Body.toString("utf-8"));
-  //         let pages = json.pages;
-  //         setPages(pages);
-  //         setJsonDownloaded(true);
-  //         console.log("JSON downloaded successfully!");
-  //       }
-  //     });
-  //   });
-  // };
+  const [numPages, setNumPages] = useState(null);
 
   const downloadRequest = async (uuid) => {
     try {
+      // --- PDF DOWNLOAD ---
+      if (!pdfDownloaded) {
         const pdfResponse = await fetch(`${SERVER}/results/${uuid}.pdf`);
-        const pdfBlob = await pdfResponse.blob();
-        setPdf(await pdfBlob.arrayBuffer());
-        setPdfDownloaded(true);
+        
+        if (pdfResponse.ok) {
+          const pdfBlob = await pdfResponse.blob();
 
+          if (pdfBlob.size > 0) {
+            // 1. HEAD CHECK: Verify it starts with %PDF
+            const header = await pdfBlob.slice(0, 5).text();
+            
+            // 2. TAIL CHECK: Verify it ends with %%EOF
+            const tail = await pdfBlob.slice(pdfBlob.size - 100, pdfBlob.size).text();
+
+            if (header === "%PDF-" && tail.includes("%%EOF")) {
+               console.log("PDF Validated (Header & EOF found)");
+               
+               // 3. CREATE BLOB URL
+               // This creates a temporary local URL (string) that is safer to pass to the Worker
+               const objectUrl = URL.createObjectURL(pdfBlob);
+               setPdfUrl(objectUrl); 
+               setPdfDownloaded(true);
+            } else {
+               console.warn("PDF incomplete or invalid. Retrying...", { header, tailEnd: tail.slice(-20) });
+            }
+          }
+        }
+      }
+
+      // --- JSON DOWNLOAD ---
+      if (!jsonDownloaded) {
         const jsonResponse = await fetch(`${SERVER}/results/${uuid}_result.json`);
-        const json = await jsonResponse.json();
-        setPages(json.pages);
-        setJsonDownloaded(true);
+        
+        if (jsonResponse.ok) {
+          const jsonText = await jsonResponse.text();
+          if (jsonText.length > 0) {
+             try {
+                const json = JSON.parse(jsonText);
+                if (json.pages && json.pages.length > 0) {
+                   setPages(json.pages);
+                   setJsonDownloaded(true);
+                }
+             } catch (e) {
+                console.warn("Invalid JSON structure");
+             }
+          }
+        }
+      }
 
     } catch (err) {
-        console.error("Error downloading:", err);
+      console.error("Error downloading:", err);
     }
-};
-
-
-useEffect(() => {
-  const interval = setInterval(() => {
-    if (!pdfDownloaded || !jsonDownloaded) {
-      downloadRequest(uuid);
-    } else {
-      setLoading(false);
-      clearInterval(interval);
-    }
-  }, 2000); // poll every 2 seconds
-
-  return () => clearInterval(interval);
-}, []); // Keep these dependencies if their changes should affect the effect
-
-
-
-  const handleTestClick = (event) => {
-    console.log(uuid)
-    console.log(pages);
-    console.log(pdf);
-    console.log(pdfDownloaded);
-    console.log(jsonDownloaded);
   };
 
-  /**
-   * request id is passed from the url
-   */
-  const { requestId } = useParams();
+  // EFFECT 1: Stop loading ONLY when both files are valid
+  useEffect(() => {
+    if (pdfDownloaded && jsonDownloaded) {
+      setLoading(false);
+    }
+  }, [pdfDownloaded, jsonDownloaded]);
 
-  const [numPages, setNumPages] = useState(null);
-  const [pageNumber, setPageNumber] = useState(1);
+  // EFFECT 2: Polling Loop
+  useEffect(() => {
+    if (loading) {
+      const interval = setInterval(() => {
+        downloadRequest(uuid);
+      }, 2000);
+
+      downloadRequest(uuid); 
+
+      return () => clearInterval(interval);
+    }
+  }, [loading, uuid, pdfDownloaded, jsonDownloaded]);
 
   function onDocumentLoadSuccess({ numPages }) {
     setNumPages(numPages);
   }
 
-  /** Returns an array of <Page> components, one for each page in the PDF */
   const renderPages = () => {
-    var pdf = [];
-    for (var i = 1; i <= numPages; i++) {
-      pdf.push(
+    const pdfPages = [];
+    for (let i = 1; i <= numPages; i++) {
+      pdfPages.push(
         <Page
+          key={i}
           renderAnnotationLayer={false}
           renderTextLayer={false}
           pageNumber={i}
         />
       );
     }
-    return pdf;
+    return pdfPages;
   };
 
-  /** Scrolls to element scrollToId */
   const scroll = (id) => {
     const target = document.getElementById(id);
     if (target) {
@@ -190,39 +128,37 @@ useEffect(() => {
   return (
     <>
       {loading ? (
-        <div class="page">
-          {/* <button onClick={handleTestClick}>Test</button> */}
-          <div class="center">
-            <div class="loader"></div>
+        <div className="page">
+          <div className="center">
+            <div className="loader"></div>
+            <p style={{marginTop: "20px"}}>Processing...</p>
           </div>
         </div>
       ) : (
         <div style={{ backgroundColor: "#eeeeee" }}>
           <NavBar />
-          {/* <button onClick={handleTestClick}>Test</button> */}
-          {pdf !== null && pages && (
+          {pdfUrl && pages.length > 0 && (
             <div>
               <br />
               <div className="grid-container">
-                {/* Empty column */}
                 <div></div>
 
-                {/* PDF */}
+                {/* PDF Viewer */}
                 <div
                   style={{
                     display: "flex",
                     justifyContent: "center",
                     height: "90vh",
-                    overflow: "scroll",
+                    overflow: "auto",
                   }}
                 >
                   <Document
-                    file={{ data: pdf }}
+                    file={pdfUrl} // Pass the Blob URL string directly
                     onLoadSuccess={onDocumentLoadSuccess}
-                    onLoadError={console.error}
+                    onLoadError={(error) => console.error("PDF Load Error:", error)}
                   >
                     {renderPages().map((item, index) => (
-                      <div id={index + 1}>
+                      <div id={index + 1} key={index}>
                         {item}
                         <br />
                       </div>
@@ -244,7 +180,7 @@ useEffect(() => {
                       <b>Results</b>
                     </div>
                     {pages.map((item, index) => (
-                      <div>
+                      <div key={index}>
                         <button className="button" onClick={() => scroll(item)}>
                           Page {item}
                         </button>

@@ -1,0 +1,136 @@
+INFO 12-01 04:18:27 [__init__.py:216] Automatically detected platform cuda.
+WARNING 12-01 04:18:29 [__init__.py:1742] argument '--disable-log-requests' is deprecated and replaced with '--enable-log-requests'. This will be removed in v0.12.0.
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:18:29 [api_server.py:1839] vLLM API server version 0.11.0
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:18:29 [utils.py:233] non-default args: {'model': 'meta-llama/Llama-2-7b-chat-hf', 'enforce_eager': True, 'disable_sliding_window': True, 'tensor_parallel_size': 2, 'swap_space': 8.0, 'max_num_batched_tokens': 512, 'max_num_seqs': 512, 'enable_chunked_prefill': True}
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:18:29 [model.py:547] Resolved architecture: LlamaForCausalLM
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:18:29 [model.py:1510] Using max model len 4096
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:18:29 [scheduler.py:205] Chunked prefill is enabled with max_num_batched_tokens=512.
+[1;36m(APIServer pid=11284)[0;0m WARNING 12-01 04:18:29 [cache.py:220] Possibly too large swap space. 16.00 GiB out of the 31.17 GiB total CPU memory is allocated for the swap space.
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:18:29 [__init__.py:381] Cudagraph is disabled under eager mode
+INFO 12-01 04:18:32 [__init__.py:216] Automatically detected platform cuda.
+[1;36m(EngineCore_DP0 pid=11296)[0;0m INFO 12-01 04:18:34 [core.py:644] Waiting for init message from front-end.
+[1;36m(EngineCore_DP0 pid=11296)[0;0m INFO 12-01 04:18:34 [core.py:77] Initializing a V1 LLM engine (v0.11.0) with config: model='meta-llama/Llama-2-7b-chat-hf', speculative_config=None, tokenizer='meta-llama/Llama-2-7b-chat-hf', skip_tokenizer_init=False, tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=False, dtype=torch.float16, max_seq_len=4096, download_dir=None, load_format=auto, tensor_parallel_size=2, pipeline_parallel_size=1, data_parallel_size=1, disable_custom_all_reduce=False, quantization=None, enforce_eager=True, kv_cache_dtype=auto, device_config=cuda, structured_outputs_config=StructuredOutputsConfig(backend='auto', disable_fallback=False, disable_any_whitespace=False, disable_additional_properties=False, reasoning_parser=''), observability_config=ObservabilityConfig(show_hidden_metrics_for_version=None, otlp_traces_endpoint=None, collect_detailed_traces=None), seed=0, served_model_name=meta-llama/Llama-2-7b-chat-hf, enable_prefix_caching=True, chunked_prefill_enabled=True, pooler_config=None, compilation_config={"level":0,"debug_dump_path":"","cache_dir":"","backend":"","custom_ops":[],"splitting_ops":null,"use_inductor":true,"compile_sizes":[],"inductor_compile_config":{"enable_auto_functionalized_v2":false},"inductor_passes":{},"cudagraph_mode":0,"use_cudagraph":true,"cudagraph_num_of_warmups":0,"cudagraph_capture_sizes":[],"cudagraph_copy_inputs":false,"full_cuda_graph":false,"use_inductor_graph_partition":false,"pass_config":{},"max_capture_size":0,"local_cache_dir":null}
+[1;36m(EngineCore_DP0 pid=11296)[0;0m INFO 12-01 04:18:34 [shm_broadcast.py:289] vLLM message queue communication handle: Handle(local_reader_ranks=[0, 1], buffer_handle=(2, 16777216, 10, 'psm_82af69c7'), local_subscribe_addr='ipc:///tmp/ded36797-1b86-45ab-80ee-185b2996ed9a', remote_subscribe_addr=None, remote_addr_ipv6=False)
+INFO 12-01 04:18:40 [__init__.py:216] Automatically detected platform cuda.
+INFO 12-01 04:18:40 [__init__.py:216] Automatically detected platform cuda.
+ERROR 12-01 04:18:47 [fa_utils.py:57] Cannot use FA version 2 is not supported due to FA2 is only supported on devices with compute capability >= 8
+ERROR 12-01 04:18:47 [fa_utils.py:57] Cannot use FA version 2 is not supported due to FA2 is only supported on devices with compute capability >= 8
+INFO 12-01 04:18:47 [shm_broadcast.py:289] vLLM message queue communication handle: Handle(local_reader_ranks=[0], buffer_handle=(1, 10485760, 10, 'psm_339bb459'), local_subscribe_addr='ipc:///tmp/2df8b823-a943-4717-a853-6a5b7b02fa1d', remote_subscribe_addr=None, remote_addr_ipv6=False)
+INFO 12-01 04:18:47 [shm_broadcast.py:289] vLLM message queue communication handle: Handle(local_reader_ranks=[0], buffer_handle=(1, 10485760, 10, 'psm_ef6b6cdf'), local_subscribe_addr='ipc:///tmp/19b637c8-7705-490b-a0ae-d897baac7828', remote_subscribe_addr=None, remote_addr_ipv6=False)
+[Gloo] Rank 1 is connected to 1 peer ranks. Expected number of connected peer ranks is : 1
+[Gloo] Rank 0 is connected to 1 peer ranks. Expected number of connected peer ranks is : 1
+[Gloo] Rank 0 is connected to 1 peer ranks. Expected number of connected peer ranks is : 1
+[Gloo] Rank 1 is connected to 1 peer ranks. Expected number of connected peer ranks is : 1
+INFO 12-01 04:18:48 [__init__.py:1384] Found nccl from library libnccl.so.2
+INFO 12-01 04:18:48 [pynccl.py:103] vLLM is using nccl==2.27.3
+INFO 12-01 04:18:48 [__init__.py:1384] Found nccl from library libnccl.so.2
+INFO 12-01 04:18:48 [pynccl.py:103] vLLM is using nccl==2.27.3
+WARNING 12-01 04:18:48 [symm_mem.py:58] SymmMemCommunicator: Device capability 7.5 not supported, communicator is not available.
+WARNING 12-01 04:18:48 [symm_mem.py:58] SymmMemCommunicator: Device capability 7.5 not supported, communicator is not available.
+INFO 12-01 04:18:48 [custom_all_reduce.py:35] Skipping P2P check and trusting the driver's P2P report.
+WARNING 12-01 04:18:48 [custom_all_reduce.py:154] Custom allreduce is disabled because your platform lacks GPU P2P capability or P2P test failed. To silence this warning, specify disable_custom_all_reduce=True explicitly.
+INFO 12-01 04:18:48 [custom_all_reduce.py:35] Skipping P2P check and trusting the driver's P2P report.
+WARNING 12-01 04:18:48 [custom_all_reduce.py:154] Custom allreduce is disabled because your platform lacks GPU P2P capability or P2P test failed. To silence this warning, specify disable_custom_all_reduce=True explicitly.
+INFO 12-01 04:18:48 [shm_broadcast.py:289] vLLM message queue communication handle: Handle(local_reader_ranks=[1], buffer_handle=(1, 4194304, 6, 'psm_ebb25198'), local_subscribe_addr='ipc:///tmp/e2b811cf-0a99-4e38-971f-38139f13f9df', remote_subscribe_addr=None, remote_addr_ipv6=False)
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 0 is connected to 0 peer ranks. Expected number of connected peer ranks is : 0
+[Gloo] Rank 1 is connected to 1 peer ranks. Expected number of connected peer ranks is : 1
+INFO 12-01 04:18:48 [__init__.py:1384] Found nccl from library libnccl.so.2
+INFO 12-01 04:18:48 [pynccl.py:103] vLLM is using nccl==2.27.3
+[Gloo] Rank 0 is connected to 1 peer ranks. Expected number of connected peer ranks is : 1
+INFO 12-01 04:18:48 [__init__.py:1384] Found nccl from library libnccl.so.2
+INFO 12-01 04:18:48 [pynccl.py:103] vLLM is using nccl==2.27.3
+INFO 12-01 04:18:48 [parallel_state.py:1208] rank 1 in world size 2 is assigned as DP rank 0, PP rank 0, TP rank 1, EP rank 1
+INFO 12-01 04:18:48 [parallel_state.py:1208] rank 0 in world size 2 is assigned as DP rank 0, PP rank 0, TP rank 0, EP rank 0
+WARNING 12-01 04:18:49 [topk_topp_sampler.py:66] FlashInfer is not available. Falling back to the PyTorch-native implementation of top-p & top-k sampling. For the best performance, please install FlashInfer.
+WARNING 12-01 04:18:49 [topk_topp_sampler.py:66] FlashInfer is not available. Falling back to the PyTorch-native implementation of top-p & top-k sampling. For the best performance, please install FlashInfer.
+[1;36m(Worker_TP1 pid=11306)[0;0m INFO 12-01 04:18:49 [gpu_model_runner.py:2602] Starting to load model meta-llama/Llama-2-7b-chat-hf...
+[1;36m(Worker_TP0 pid=11305)[0;0m INFO 12-01 04:18:49 [gpu_model_runner.py:2602] Starting to load model meta-llama/Llama-2-7b-chat-hf...
+[1;36m(Worker_TP1 pid=11306)[0;0m INFO 12-01 04:18:50 [gpu_model_runner.py:2634] Loading model from scratch...
+[1;36m(Worker_TP0 pid=11305)[0;0m INFO 12-01 04:18:50 [gpu_model_runner.py:2634] Loading model from scratch...
+[1;36m(Worker_TP0 pid=11305)[0;0m INFO 12-01 04:18:50 [cuda.py:372] Using FlexAttention backend on V1 engine.
+[1;36m(Worker_TP1 pid=11306)[0;0m INFO 12-01 04:18:50 [cuda.py:372] Using FlexAttention backend on V1 engine.
+[1;36m(Worker_TP0 pid=11305)[0;0m INFO 12-01 04:18:50 [weight_utils.py:392] Using model weights format ['*.safetensors']
+[1;36m(Worker_TP1 pid=11306)[0;0m INFO 12-01 04:18:50 [weight_utils.py:392] Using model weights format ['*.safetensors']
+[1;36m(Worker_TP1 pid=11306)[0;0m INFO 12-01 04:18:56 [default_loader.py:267] Loading weights took 4.83 seconds
+[1;36m(Worker_TP0 pid=11305)[0;0m INFO 12-01 04:18:56 [default_loader.py:267] Loading weights took 5.17 seconds
+[1;36m(Worker_TP1 pid=11306)[0;0m INFO 12-01 04:18:56 [gpu_model_runner.py:2653] Model loading took 6.3102 GiB and 5.997116 seconds
+[1;36m(Worker_TP0 pid=11305)[0;0m INFO 12-01 04:18:57 [gpu_model_runner.py:2653] Model loading took 6.3102 GiB and 6.223372 seconds
+[1;36m(Worker_TP1 pid=11306)[0;0m INFO 12-01 04:19:01 [gpu_worker.py:298] Available KV cache memory: 2.55 GiB
+[1;36m(Worker_TP0 pid=11305)[0;0m INFO 12-01 04:19:01 [gpu_worker.py:298] Available KV cache memory: 2.55 GiB
+[1;36m(EngineCore_DP0 pid=11296)[0;0m INFO 12-01 04:19:02 [kv_cache_utils.py:1087] GPU KV cache size: 10,432 tokens
+[1;36m(EngineCore_DP0 pid=11296)[0;0m INFO 12-01 04:19:02 [kv_cache_utils.py:1091] Maximum concurrency for 4,096 tokens per request: 2.55x
+[1;36m(EngineCore_DP0 pid=11296)[0;0m INFO 12-01 04:19:02 [kv_cache_utils.py:1087] GPU KV cache size: 10,432 tokens
+[1;36m(EngineCore_DP0 pid=11296)[0;0m INFO 12-01 04:19:02 [kv_cache_utils.py:1091] Maximum concurrency for 4,096 tokens per request: 2.55x
+[1;36m(Worker_TP0 pid=11305)[0;0m WARNING 12-01 04:19:02 [cudagraph_dispatcher.py:106] cudagraph dispatching keys are not initialized. No cudagraph will be used.
+[1;36m(Worker_TP1 pid=11306)[0;0m WARNING 12-01 04:19:02 [cudagraph_dispatcher.py:106] cudagraph dispatching keys are not initialized. No cudagraph will be used.
+[1;36m(EngineCore_DP0 pid=11296)[0;0m INFO 12-01 04:19:02 [core.py:210] init engine (profile, create kv cache, warmup model) took 5.57 seconds
+[1;36m(EngineCore_DP0 pid=11296)[0;0m WARNING 12-01 04:19:03 [cache.py:220] Possibly too large swap space. 16.00 GiB out of the 31.17 GiB total CPU memory is allocated for the swap space.
+[1;36m(EngineCore_DP0 pid=11296)[0;0m INFO 12-01 04:19:03 [__init__.py:381] Cudagraph is disabled under eager mode
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:19:03 [loggers.py:147] Engine 000: vllm cache_config_info with initialization after num_gpu_blocks is: 652
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:19:03 [api_server.py:1634] Supported_tasks: ['generate']
+[1;36m(APIServer pid=11284)[0;0m WARNING 12-01 04:19:03 [model.py:1389] Default sampling parameters have been overridden by the model's Hugging Face generation config recommended from the model creator. If this is not intended, please relaunch vLLM instance with `--generation-config vllm`.
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:19:03 [serving_responses.py:137] Using default chat sampling params from model: {'temperature': 0.6, 'top_p': 0.9}
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:19:03 [serving_chat.py:139] Using default chat sampling params from model: {'temperature': 0.6, 'top_p': 0.9}
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:19:03 [serving_completion.py:76] Using default completion sampling params from model: {'temperature': 0.6, 'top_p': 0.9}
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:19:03 [api_server.py:1912] Starting vLLM API server 0 on http://0.0.0.0:8000
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:19:03 [launcher.py:34] Available routes are:
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:19:03 [launcher.py:42] Route: /openapi.json, Methods: HEAD, GET
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:19:03 [launcher.py:42] Route: /docs, Methods: HEAD, GET
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:19:03 [launcher.py:42] Route: /docs/oauth2-redirect, Methods: HEAD, GET
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:19:03 [launcher.py:42] Route: /redoc, Methods: HEAD, GET
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:19:03 [launcher.py:42] Route: /health, Methods: GET
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:19:03 [launcher.py:42] Route: /load, Methods: GET
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:19:03 [launcher.py:42] Route: /ping, Methods: POST
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:19:03 [launcher.py:42] Route: /ping, Methods: GET
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:19:03 [launcher.py:42] Route: /tokenize, Methods: POST
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:19:03 [launcher.py:42] Route: /detokenize, Methods: POST
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:19:03 [launcher.py:42] Route: /v1/models, Methods: GET
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:19:03 [launcher.py:42] Route: /version, Methods: GET
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:19:03 [launcher.py:42] Route: /v1/responses, Methods: POST
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:19:03 [launcher.py:42] Route: /v1/responses/{response_id}, Methods: GET
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:19:03 [launcher.py:42] Route: /v1/responses/{response_id}/cancel, Methods: POST
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:19:03 [launcher.py:42] Route: /v1/chat/completions, Methods: POST
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:19:03 [launcher.py:42] Route: /v1/completions, Methods: POST
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:19:03 [launcher.py:42] Route: /v1/embeddings, Methods: POST
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:19:03 [launcher.py:42] Route: /pooling, Methods: POST
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:19:03 [launcher.py:42] Route: /classify, Methods: POST
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:19:03 [launcher.py:42] Route: /score, Methods: POST
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:19:03 [launcher.py:42] Route: /v1/score, Methods: POST
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:19:03 [launcher.py:42] Route: /v1/audio/transcriptions, Methods: POST
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:19:03 [launcher.py:42] Route: /v1/audio/translations, Methods: POST
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:19:03 [launcher.py:42] Route: /rerank, Methods: POST
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:19:03 [launcher.py:42] Route: /v1/rerank, Methods: POST
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:19:03 [launcher.py:42] Route: /v2/rerank, Methods: POST
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:19:03 [launcher.py:42] Route: /scale_elastic_ep, Methods: POST
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:19:03 [launcher.py:42] Route: /is_scaling_elastic_ep, Methods: POST
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:19:03 [launcher.py:42] Route: /invocations, Methods: POST
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:19:03 [launcher.py:42] Route: /metrics, Methods: GET
+[1;36m(APIServer pid=11284)[0;0m INFO:     127.0.0.1:46140 - "GET /v1/models HTTP/1.1" 200 OK
+[1;36m(APIServer pid=11284)[0;0m INFO:     10.0.0.3:38970 - "GET /v1/models HTTP/1.1" 200 OK
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:20:54 [loggers.py:127] Engine 000: Avg prompt throughput: 0.6 tokens/s, Avg generation throughput: 0.2 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.2%, Prefix cache hit rate: 0.0%
+[1;36m(APIServer pid=11284)[0;0m INFO:     10.0.0.3:38978 - "POST /v1/completions HTTP/1.1" 200 OK
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:21:04 [loggers.py:127] Engine 000: Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 9.8 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 0.0%
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:21:14 [loggers.py:127] Engine 000: Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 0.0%
+[1;36m(APIServer pid=11284)[0;0m INFO:     10.0.0.3:36166 - "GET /v1/models HTTP/1.1" 200 OK
+[1;36m(APIServer pid=11284)[0;0m INFO:     10.0.0.3:36178 - "POST /v1/completions HTTP/1.1" 400 Bad Request
+[1;36m(APIServer pid=11284)[0;0m INFO:     10.0.0.3:53126 - "GET /v1/models HTTP/1.1" 200 OK
+[1;36m(APIServer pid=11284)[0;0m INFO:     10.0.0.3:53128 - "POST /v1/completions HTTP/1.1" 400 Bad Request
+[1;36m(APIServer pid=11284)[0;0m INFO:     10.0.0.3:56098 - "GET /v1/models HTTP/1.1" 200 OK
+[1;36m(APIServer pid=11284)[0;0m INFO:     10.0.0.3:56114 - "POST /v1/completions HTTP/1.1" 200 OK
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:31:24 [loggers.py:127] Engine 000: Avg prompt throughput: 0.7 tokens/s, Avg generation throughput: 5.9 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 0.0%
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:31:34 [loggers.py:127] Engine 000: Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 0.0%
+[1;36m(APIServer pid=11284)[0;0m INFO:     10.0.0.3:55494 - "GET /v1/models HTTP/1.1" 200 OK
+[1;36m(APIServer pid=11284)[0;0m INFO:     10.0.0.3:55510 - "POST /v1/completions HTTP/1.1" 200 OK
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:37:04 [loggers.py:127] Engine 000: Avg prompt throughput: 1.4 tokens/s, Avg generation throughput: 2.0 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 0.0%
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:37:14 [loggers.py:127] Engine 000: Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 0.0%
+[1;36m(APIServer pid=11284)[0;0m INFO:     10.0.0.3:42324 - "GET /v1/models HTTP/1.1" 200 OK
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:39:34 [loggers.py:127] Engine 000: Avg prompt throughput: 0.7 tokens/s, Avg generation throughput: 2.7 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.5%, Prefix cache hit rate: 0.0%
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:39:44 [loggers.py:127] Engine 000: Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 11.4 tokens/s, Running: 1 reqs, Waiting: 0 reqs, GPU KV cache usage: 1.5%, Prefix cache hit rate: 0.0%
+[1;36m(APIServer pid=11284)[0;0m INFO:     10.0.0.3:42326 - "POST /v1/completions HTTP/1.1" 200 OK
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:39:54 [loggers.py:127] Engine 000: Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 5.9 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 0.0%
+[1;36m(APIServer pid=11284)[0;0m INFO 12-01 04:40:04 [loggers.py:127] Engine 000: Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 0 reqs, Waiting: 0 reqs, GPU KV cache usage: 0.0%, Prefix cache hit rate: 0.0%
