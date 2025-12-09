@@ -17,4 +17,4 @@ DURATION = 86400 * 7
 BUCKET = 'mathsearch-intermediary'
 
 # ML Model API (local compute cluster)
-ML_API_URL = os.environ.get('ML_API_URL', 'http://localhost:8000')
+ML_API_URL = os.environ.get('ML_API_URL', 'https://mathsearchmlmodel.cornelldata.science')

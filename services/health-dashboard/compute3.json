@@ -1,46 +1,53 @@
 {
-  "timestamp": 1764763552,
-  "temperature": 44.6,
+  "timestamp": 1765305757,
+  "temperature": 46.3,
   "cpu_usage": 0.6,
   "memory": {
     "total_kb": 8128008,
-    "used_kb": 522112,
-    "available_kb": 7605896,
-    "usage_percent": 6.4
+    "used_kb": 444940,
+    "available_kb": 7683068,
+    "usage_percent": 5.5
   },
   "disk": {
     "total_gb": 28.1,
-    "used_gb": 4.1,
-    "available_gb": 24.1,
-    "usage_percent": 14.4
+    "used_gb": 4.2,
+    "available_gb": 23.9,
+    "usage_percent": 15.0
   },
   "load_average": {
-    "1min": 0.02978515625,
-    "5min": 0.0283203125,
+    "1min": 0.0,
+    "5min": 0.0,
     "15min": 0.0
   },
-  "uptime": "9d 15h 10m",
+  "uptime": "0d 21h 1m",
   "processes": [
     {
+      "user": "root",
+      "pid": "5841",
+      "cpu": "0.1",
+      "mem": "0.0",
+      "command": "[kworker/0:1-cgroup_destroy]"
+    },
+    {
+      "user": "root",
+      "pid": "5911",
+      "cpu": "0.1",
+      "mem": "0.0",
+      "command": "[kworker/0:2-events]"
+    },
+    {
       "user": "cadmin",
-      "pid": "113704",
-      "cpu": "100",
-      "mem": "0.0",
-      "command": "ps aux"
+      "pid": "6070",
+      "cpu": "0.1",
+      "mem": "0.2",
+      "command": "python3 api_server.py compute3"
     },
     {
       "user": "root",
-      "pid": "113123",
+      "pid": "6101",
       "cpu": "0.1",
       "mem": "0.0",
-      "command": "[kworker/2:3-events]"
-    },
-    {
-      "user": "root",
-      "pid": "113551",
-      "cpu": "0.1",
-      "mem": "0.0",
-      "command": "[kworker/2:0-events]"
+      "command": "[kworker/0:3-events]"
     },
     {
       "user": "root",
@@ -48,13 +55,6 @@
       "cpu": "0.0",
       "mem": "0.1",
       "command": "/sbin/init fixrtc"
-    },
-    {
-      "user": "root",
-      "pid": "2",
-      "cpu": "0.0",
-      "mem": "0.0",
-      "command": "[kthreadd]"
     }
   ]
 }

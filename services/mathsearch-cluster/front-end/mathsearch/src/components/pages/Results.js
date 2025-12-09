@@ -4,7 +4,7 @@ import "./Results.css";
 import NavBar from "../NavBar.js";
 import { useParams } from "react-router-dom";
 
-const SERVER = "http://localhost:8001";
+const SERVER = "https://staticservermathsearch.cornelldata.science";
 
 // 1. WORKER CONFIGURATION
 // Use explicit HTTPS and unpkg for better stability with version 2.16.105

@@ -1,10 +1,0 @@
-[1;36m(APIServer pid=14219)[0;0m `torch_dtype` is deprecated! Use `dtype` instead!
-[1;36m(Worker_TP0 pid=14238)[0;0m Loading safetensors checkpoint shards:   0% Completed | 0/2 [00:00<?, ?it/s]
-[1;36m(Worker_TP0 pid=14238)[0;0m Loading safetensors checkpoint shards:  50% Completed | 1/2 [00:03<00:03,  3.41s/it]
-[1;36m(Worker_TP0 pid=14238)[0;0m Loading safetensors checkpoint shards: 100% Completed | 2/2 [00:05<00:00,  2.38s/it]
-[1;36m(Worker_TP0 pid=14238)[0;0m Loading safetensors checkpoint shards: 100% Completed | 2/2 [00:05<00:00,  2.54s/it]
-[1;36m(Worker_TP0 pid=14238)[0;0m 
-[1;36m(APIServer pid=14219)[0;0m INFO:     Started server process [14219]
-[1;36m(APIServer pid=14219)[0;0m INFO:     Waiting for application startup.
-[1;36m(APIServer pid=14219)[0;0m INFO:     Application startup complete.
-slurmstepd-compute1: error: *** JOB 51 ON compute1 CANCELLED AT 2025-12-01T18:45:18 ***

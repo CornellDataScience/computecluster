@@ -1,60 +1,60 @@
 {
-  "timestamp": 1765045528,
-  "temperature": 31.5,
-  "cpu_usage": 0.1,
+  "timestamp": 1765305756,
+  "temperature": 46.2,
+  "cpu_usage": 3.1,
   "memory": {
     "total_kb": 32687844,
-    "used_kb": 5848640,
-    "available_kb": 26839204,
-    "usage_percent": 17.9
+    "used_kb": 2935228,
+    "available_kb": 29752616,
+    "usage_percent": 9.0
   },
   "disk": {
     "total_gb": 3664.0,
-    "used_gb": 449.1,
-    "available_gb": 3214.9,
-    "usage_percent": 12.3
+    "used_gb": 448.6,
+    "available_gb": 3215.3,
+    "usage_percent": 12.2
   },
   "load_average": {
-    "1min": 0.4287109375,
-    "5min": 0.1982421875,
-    "15min": 0.064453125
+    "1min": 1.06640625,
+    "5min": 1.005859375,
+    "15min": 1.00390625
   },
-  "uptime": "2d 22h 52m",
+  "uptime": "5d 23h 9m",
   "processes": [
     {
       "user": "cadmin",
-      "pid": "175736",
-      "cpu": "46.4",
-      "mem": "0.6",
-      "command": "/home/cadmin/.vscode-server/cli/servers/Stable-ac4cbdf48759c"
-    },
-    {
-      "user": "cadmin",
-      "pid": "176253",
-      "cpu": "14.6",
-      "mem": "1.5",
-      "command": "/home/cadmin/.vscode-server/cli/servers/Stable-bf9252a2fb45b"
-    },
-    {
-      "user": "cadmin",
-      "pid": "176129",
-      "cpu": "8.2",
+      "pid": "310987",
+      "cpu": "300",
       "mem": "0.0",
-      "command": "/home/cadmin/.vscode-server/code-bf9252a2fb45be6893dd8870c0b"
+      "command": "ps aux"
     },
     {
       "user": "cadmin",
-      "pid": "175725",
-      "cpu": "7.9",
-      "mem": "1.1",
-      "command": "/home/cadmin/.vscode-server/cli/servers/Stable-ac4cbdf48759c"
+      "pid": "210471",
+      "cpu": "87.2",
+      "mem": "0.1",
+      "command": "/opt/miniconda3/bin/python3.13 /home/cadmin/.local/bin/uvico"
     },
     {
       "user": "cadmin",
-      "pid": "176216",
-      "cpu": "6.2",
-      "mem": "0.3",
-      "command": "/home/cadmin/.vscode-server/cli/servers/Stable-bf9252a2fb45b"
+      "pid": "210575",
+      "cpu": "3.4",
+      "mem": "0.0",
+      "command": "/home/cadmin/computecluster/services/mathsearch-cluster/ml-m"
+    },
+    {
+      "user": "cadmin",
+      "pid": "210577",
+      "cpu": "0.1",
+      "mem": "3.8",
+      "command": "/home/cadmin/computecluster/services/mathsearch-cluster/ml-m"
+    },
+    {
+      "user": "root",
+      "pid": "1",
+      "cpu": "0.0",
+      "mem": "0.0",
+      "command": "/sbin/init"
     }
   ]
 }

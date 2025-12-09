@@ -335,7 +335,7 @@ import MathKeyboard from './MathKeyboard';
 
 /* BEGIN API CONSTANTS */
 // Local API endpoint for file uploads
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8001';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'https://staticservermathsearch.cornelldata.science';
 /* END API CONSTANTS */
 
 function LaTeXInput() {

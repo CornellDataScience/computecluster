@@ -9,11 +9,12 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],       # or ["http://localhost:3000"]
+    allow_origins=["https://mathsearch.cornelldata.science"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "output")
 INPUT_DIR = os.path.join(os.path.dirname(__file__), "input")
@@ -25,10 +26,17 @@ os.makedirs(OUTPUT_DIR, exist_ok=True)
 @app.get("/results/{filename}")
 def get_result_file(filename: str):
     file_path = os.path.join(OUTPUT_DIR, filename)
-    print("searching for file")
+    print("searching for file:", file_path)
+
     if not os.path.exists(file_path):
-        return {"error": "File not found"}
-    return FileResponse(file_path)
+        # Let FastAPI generate a normal error response (will get CORS via middleware)
+        raise HTTPException(status_code=404, detail="File not found")
+
+    # File exists – return it with explicit CORS headers
+    response = FileResponse(file_path, media_type="application/pdf")
+    response.headers["Access-Control-Allow-Origin"] = "https://mathsearch.cornelldata.science"
+    response.headers["Access-Control-Allow-Credentials"] = "true"
+    return response
 
 @app.post("/upload")
 async def upload_file(file: UploadFile = File(...), uuid: str = None, type: str = None):
