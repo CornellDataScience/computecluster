@@ -1,3 +1,4 @@
+!(clusterlogo.png)
 # CDS Compute Cluster
 
 ## Overview
