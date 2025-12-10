@@ -1,4 +1,5 @@
-<img src="clusterlogo.png" alt="an orca tail intertwined with circuitry" width="150">
+<img src="clusterlogo.png" alt="an orca tail intertwined with circuitry" width="300">
+
 # CDS Compute Cluster
 
 ## Overview
