@@ -11,6 +11,7 @@
 10.0.0.2 compute1
 10.0.0.3 compute2
 10.0.0.4 compute3
+10.0.0.5 compute3
 
 # The following lines are desirable for IPv6 capable hosts
 ::1 localhost ip6-localhost ip6-loopback
