@@ -1,4 +1,4 @@
-![an orca tail intertwined with circuitry](clusterlogo.png)
+<img src="clusterlogo.png" alt="an orca tail intertwined with circuitry" width="150">
 # CDS Compute Cluster
 
 ## Overview
