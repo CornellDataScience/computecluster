@@ -1,4 +1,4 @@
-!(clusterlogo.png)
+![an orca tail intertwined with circuitry](clusterlogo.png)
 # CDS Compute Cluster
 
 ## Overview
