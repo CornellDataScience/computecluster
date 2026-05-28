@@ -16,6 +16,9 @@ The **CDS Compute Cluster** is a high-performance computing environment develope
 * **Authentication and Sync:** Munge provides inter-node authentication, and Chrony ensures time synchronization, which is critical for job coordination.
 * **Containerized Environments:** Docker is used to create uniform runtime environments across nodes, ensuring compatibility and reproducibility regardless of hardware or operating system differences.
 
+  <img width="666" height="362" alt="Screenshot 2026-05-28 at 1 54 33 PM" src="https://github.com/user-attachments/assets/ed63f8e4-2e49-403e-bfa1-3b49ea548658" />
+
+
 ## Key Technologies
 
 * **Slurm Scheduler:** Manages job queuing and parallel dispatch across CPUs and GPUs.
